@@ -31,7 +31,8 @@ def process(item):
         (i for i, s in enumerate(paras) if MEASURE_RE.search(s)), None
     )
     if recipe_start_i is None:
-        logging.debug("""No recipe found in "%s". Skipping.""", item["title"])
+        # TODO: reduce false negatives
+        logging.info("""No recipe found in "%s". Skipping.""", item["title"])
         return None
 
     logging.debug(
@@ -51,7 +52,7 @@ def process(item):
 
 
 def run():
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     items = filter(bool, (process(item) for item in json.load(sys.stdin)))
     print_markdown(items)
