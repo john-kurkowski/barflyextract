@@ -60,7 +60,8 @@ def process(item):
 def run():
     logging.basicConfig(level=logging.INFO)
 
-    items, skipped = partition(process(item) for item in json.load(sys.stdin))
+    with sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r") as fil:
+        items, skipped = partition(process(item) for item in json.load(fil))
     items = list(items)
     skipped = list(skipped)
 
