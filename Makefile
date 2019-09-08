@@ -1,6 +1,8 @@
 DIRS=build
 $(info $(shell mkdir -p $(DIRS)))
 
+all: build/recipes.html
+
 clean:
 	rm -rf build/
 

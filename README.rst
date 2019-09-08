@@ -3,13 +3,18 @@ barflyextract
 =============
 
 
-Add a short description here!
+Scrape The Educated Barfly's cocktail recipes from its YouTube channel.
 
+Usage
+====
 
-Description
-===========
+```sh
+# Your YouTube v3 API key here (perhaps from a dotenv)
+export API_KEY=myapikeyhere
 
-A longer description of your project goes here...
+make
+open build/recipes.html
+```
 
 
 Note
