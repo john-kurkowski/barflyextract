@@ -1,8 +1,11 @@
+DIRS=build
+$(info $(shell mkdir -p $(DIRS)))
+
 clean:
-	rm playlist.json recipes.md
+	rm -rf build/
 
-playlist.json:
-	python src/barflyextract/api.py > playlist.json
+build/playlist.json:
+	python src/barflyextract/api.py > build/playlist.json
 
-recipes.md: playlist.json
-	python src/barflyextract/extract.py < playlist.json > recipes.md
+build/recipes.md: build/playlist.json
+	python src/barflyextract/extract.py < build/playlist.json > build/recipes.md
