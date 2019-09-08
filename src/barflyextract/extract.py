@@ -5,6 +5,8 @@ import sys
 
 import unidecode
 
+from barflyextract.util import partition
+
 MEASURE_RE = re.compile(r"^\S*\d(oz|ml)")
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
@@ -54,8 +56,15 @@ def process(item):
 def run():
     logging.basicConfig(level=logging.INFO)
 
-    items = filter(bool, (process(item) for item in json.load(sys.stdin)))
+    items, skipped = partition(process(item) for item in json.load(sys.stdin))
+    items = list(items)
+    skipped = list(skipped)
+
     print_markdown(items)
+
+    logging.info(
+        """Collected %d recipes. Skipped %d items.""", len(items), len(skipped)
+    )
 
 
 if __name__ == "__main__":
