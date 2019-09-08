@@ -1,14 +1,18 @@
 import json
 import logging
+import operator
 import re
 import sys
 
 MEASURE_RE = re.compile(r"\d(oz|ml)")
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
+TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 
 
 def print_markdown(items):
-    for item in items:
+    sorted_items = sorted(items, key=operator.itemgetter("title"))
+
+    for item in sorted_items:
         print(f"# {item['title']}")
         print()
         print(item["recipe"])
@@ -32,6 +36,10 @@ def process(item):
     )
     recipe = "\n\n".join(paras[recipe_start_i:])
 
+    name_match = TYPE_NAME_RE.match(item["title"])
+    title = name_match.group("name") if name_match else item["title"]
+
+    item["title"] = title
     item["recipe"] = recipe
     return item
 
