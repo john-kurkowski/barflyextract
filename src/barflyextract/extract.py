@@ -11,7 +11,7 @@ def print_markdown(items):
     for item in items:
         print(f"# {item['title']}")
         print()
-        print(f"# {item['recipe']}")
+        print(item["recipe"])
         print()
 
 
