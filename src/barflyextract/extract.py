@@ -1,16 +1,17 @@
 import json
 import logging
-import operator
 import re
 import sys
 
-MEASURE_RE = re.compile(r"\d(oz|ml)")
+import unidecode
+
+MEASURE_RE = re.compile(r"^\S*\d(oz|ml)")
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 
 
 def print_markdown(items):
-    sorted_items = sorted(items, key=operator.itemgetter("title"))
+    sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
 
     for item in sorted_items:
         print(f"# {item['title']}")
