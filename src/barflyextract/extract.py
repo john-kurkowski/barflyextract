@@ -30,8 +30,8 @@ def process(item):
         return None
 
     paras = PARAGRAPHS_RE.split(item["description"])
-    recipe_start_i = next(
-        (i for i, s in enumerate(paras) if MEASURE_RE.search(s)), None
+    recipe_start_i, recipe_start = next(
+        ((i, s) for i, s in enumerate(paras) if MEASURE_RE.search(s)), (None, None)
     )
     if recipe_start_i is None:
         # TODO: reduce false negatives
@@ -41,7 +41,10 @@ def process(item):
     def is_blocked_para(para):
         return URL_RE.search(para)
 
-    recipe = [para for para in paras[recipe_start_i:] if not is_blocked_para(para)]
+    recipe_remainder = paras[recipe_start_i + 1 :]
+    recipe = [recipe_start] + [
+        para for para in recipe_remainder if not is_blocked_para(para)
+    ]
     logging.debug(
         """Recipe found in "%s" at paragraph %d. Taking it and remaining %d paragraphs.""",
         item["title"],
