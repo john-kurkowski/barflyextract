@@ -6,15 +6,15 @@ barflyextract
 Scrape The Educated Barfly's cocktail recipes from its YouTube channel.
 
 Usage
-====
+=====
 
-```sh
-# Your YouTube v3 API key here (perhaps from a dotenv)
-export API_KEY=myapikeyhere
+.. code-block:: sh
 
-make
-open build/recipes.html
-```
+    # Your YouTube v3 API key here (perhaps from a dotenv)
+    export API_KEY=myapikeyhere
+
+    make
+    open build/recipes.html
 
 
 Note
