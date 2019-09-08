@@ -34,8 +34,8 @@ def process(item):
         ((i, s) for i, s in enumerate(paras) if MEASURE_RE.search(s)), (None, None)
     )
     if recipe_start_i is None:
-        # TODO: reduce false negatives
         logging.info("""No recipe found in "%s". Skipping.""", item["title"])
+        logging.debug(item["description"])
         return None
 
     def is_blocked_para(para):
