@@ -21,6 +21,11 @@ def print_markdown(items):
 
 
 def process(item):
+    blocked_types = ("Home Bar", "Tasting")
+    is_blocked = any(item["title"].startswith(s) for s in blocked_types)
+    if is_blocked:
+        return None
+
     paras = PARAGRAPHS_RE.split(item["description"])
     recipe_start_i = next(
         (i for i, s in enumerate(paras) if MEASURE_RE.search(s)), None
