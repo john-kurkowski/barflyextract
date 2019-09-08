@@ -7,9 +7,9 @@ TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 
 
 def scrape_playlist_items(youtube, playlist_id):
-    items_per_page = 5
+    items_per_page = 50
     items_yielded = 0
-    max_items = 12
+    max_items = 999
     request_kwargs = dict(
         maxResults=items_per_page, part="snippet", playlistId=playlist_id
     )
