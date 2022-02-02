@@ -10,9 +10,10 @@ Usage
 
 .. code-block:: sh
 
-    # Your YouTube v3 API key here (perhaps from a dotenv)
+    # Your YouTube Data API v3 key here (perhaps from a dotenv)
     export API_KEY=myapikeyhere
 
+    make clean
     make
     open build/recipes.html
 
