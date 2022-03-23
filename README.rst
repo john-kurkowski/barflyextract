@@ -5,6 +5,22 @@ barflyextract
 
 Scrape The Educated Barfly's cocktail recipes from its YouTube channel.
 
+
+Prerequisites
+=============
+
+- ``pandoc``
+- ``python``
+
+
+Install
+=======
+
+.. code-block:: sh
+
+    pip install --editable .
+
+
 Usage
 =====
 
