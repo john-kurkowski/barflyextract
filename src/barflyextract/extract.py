@@ -30,10 +30,10 @@ def process(item):
         return None
 
     paras = PARAGRAPHS_RE.split(item["description"])
-    recipe_start_i, recipe_start = next(
-        ((i, s) for i, s in enumerate(paras) if MEASURE_RE.search(s)), (None, None)
+    maybe_recipe_starts = next(
+        ((i, s) for i, s in enumerate(paras) if MEASURE_RE.search(s)), None
     )
-    if recipe_start_i is None:
+    if not maybe_recipe_starts:
         logging.info("""No recipe found in "%s". Skipping.""", item["title"])
         logging.debug(item["description"])
         return None
@@ -41,6 +41,7 @@ def process(item):
     def is_blocked_para(para):
         return URL_RE.search(para)
 
+    recipe_start_i, recipe_start = maybe_recipe_starts
     recipe_remainder = paras[recipe_start_i + 1 :]
     recipe = [recipe_start] + [
         para for para in recipe_remainder if not is_blocked_para(para)

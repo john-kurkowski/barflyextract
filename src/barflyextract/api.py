@@ -1,7 +1,7 @@
 import json
 import os
 
-import googleapiclient.discovery
+import googleapiclient.discovery  # type: ignore[import]
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 
