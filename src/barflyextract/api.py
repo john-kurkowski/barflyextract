@@ -1,13 +1,14 @@
 import json
 import os
 import sys
+from typing import Any, Generator
 
 import googleapiclient.discovery  # type: ignore[import]
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 
 
-def scrape_playlist_items(youtube, playlist_id):
+def scrape_playlist_items(youtube: Any, playlist_id: str) -> Generator[Any, None, None]:
     items_per_page = 50
     items_yielded = 0
     max_items = 999
@@ -33,7 +34,7 @@ def scrape_playlist_items(youtube, playlist_id):
                 return
 
 
-def run():
+def run() -> None:
     youtube = googleapiclient.discovery.build(
         "youtube", "v3", developerKey=os.environ["API_KEY"]
     )

@@ -2,8 +2,8 @@ import json
 import logging
 import re
 import sys
-
 import unidecode
+from typing import Any, Iterable, Optional, TextIO, cast
 
 from barflyextract.util import partition
 
@@ -12,8 +12,10 @@ PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 URL_RE = re.compile(r"\bhttps?://")
 
+Item = dict[str, Any]
 
-def print_markdown(fil, items):
+
+def print_markdown(fil: TextIO, items: Iterable[Item]) -> None:
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
 
     for item in sorted_items:
@@ -23,7 +25,7 @@ def print_markdown(fil, items):
         print(file=fil)
 
 
-def process(item):
+def process(item: Item) -> Optional[Item]:
     blocked_types = ("Home Bar", "Tasting")
     is_blocked_type = any(item["title"].startswith(s) for s in blocked_types)
     if is_blocked_type:
@@ -38,8 +40,8 @@ def process(item):
         logging.debug(item["description"])
         return None
 
-    def is_blocked_para(para):
-        return URL_RE.search(para)
+    def is_blocked_para(para: str) -> bool:
+        return bool(URL_RE.search(para))
 
     recipe_start_i, recipe_start = maybe_recipe_starts
     recipe_remainder = paras[recipe_start_i + 1 :]
@@ -61,12 +63,14 @@ def process(item):
     return item
 
 
-def run():
+def run() -> None:
     logging.basicConfig(level=logging.INFO)
 
-    with (sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r")) as fil:
+    with (
+        sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r", encoding="utf-8")
+    ) as fil:
         items, skipped = partition(process(item) for item in json.load(fil))
-    items = list(items)
+    items = cast(list[Item], list(items))
     skipped = list(skipped)
 
     with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
