@@ -7,10 +7,13 @@ clean:
 	rm -rf build/
 
 build/playlist.json:
-	python src/barflyextract/api.py > build/playlist.json
+	python src/barflyextract/api.py > $@.tmp
+	mv $@.tmp $@
 
 build/recipes.html: build/recipes.md
-	pandoc -f markdown+hard_line_breaks build/recipes.md > build/recipes.html
+	pandoc -f markdown+hard_line_breaks $< > $@.tmp
+	mv $@.tmp $@
 
 build/recipes.md: build/playlist.json
-	python src/barflyextract/extract.py - < build/playlist.json > build/recipes.md
+	python src/barflyextract/extract.py - < $< > $@.tmp
+	mv $@.tmp $@
