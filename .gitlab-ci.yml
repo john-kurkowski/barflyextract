@@ -27,10 +27,16 @@ before_script:
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
 
-py37:
-  image: "python:3.7"
+test:
+  image: "python:3.10"
   script:
   - python setup.py test
+
+typecheck:
+  image: "python:3.10"
+  script:
+  - pip install --editable '.[testing]'
+  - mypy --show-error-codes src/ tests/
 
 # This deploy job uses a simple deploy flow to Heroku, other providers, e.g. AWS Elastic Beanstalk
 # are supported too: https://github.com/travis-ci/dpl
