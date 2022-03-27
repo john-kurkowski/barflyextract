@@ -1,14 +1,21 @@
 import json
 import os
 import sys
-from typing import Any, Generator
+from typing import Any, Generator, TypedDict
 
 import googleapiclient.discovery  # type: ignore[import]
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 
 
-def scrape_playlist_items(youtube: Any, playlist_id: str) -> Generator[Any, None, None]:
+class PlaylistItem(TypedDict):
+    title: str
+    description: str
+
+
+def scrape_playlist_items(
+    youtube: Any, playlist_id: str
+) -> Generator[PlaylistItem, None, None]:
     items_per_page = 50
     items_yielded = 0
     max_items = 999

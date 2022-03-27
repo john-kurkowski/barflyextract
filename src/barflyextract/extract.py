@@ -3,8 +3,9 @@ import logging
 import re
 import sys
 import unidecode
-from typing import Any, Iterable, Optional, TextIO, cast
+from typing import Iterable, Optional, TextIO, cast
 
+from barflyextract.api import PlaylistItem
 from barflyextract.util import partition
 
 MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
@@ -12,10 +13,12 @@ PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 URL_RE = re.compile(r"\bhttps?://")
 
-Item = dict[str, Any]
+
+class RecipePlaylistItem(PlaylistItem):
+    recipe: str
 
 
-def print_markdown(fil: TextIO, items: Iterable[Item]) -> None:
+def print_markdown(fil: TextIO, items: Iterable[RecipePlaylistItem]) -> None:
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
 
     for item in sorted_items:
@@ -25,7 +28,7 @@ def print_markdown(fil: TextIO, items: Iterable[Item]) -> None:
         print(file=fil)
 
 
-def process(item: Item) -> Optional[Item]:
+def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
     blocked_types = ("Home Bar", "Tasting")
     is_blocked_type = any(item["title"].startswith(s) for s in blocked_types)
     if is_blocked_type:
@@ -58,9 +61,11 @@ def process(item: Item) -> Optional[Item]:
     name_match = TYPE_NAME_RE.match(item["title"])
     title = name_match.group("name") if name_match else item["title"]
 
-    item["title"] = title
-    item["recipe"] = "\n\n".join(recipe)
-    return item
+    return {
+        "description": item["description"],
+        "recipe": "\n\n".join(recipe),
+        "title": title,
+    }
 
 
 def run() -> None:
@@ -70,7 +75,7 @@ def run() -> None:
         sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r", encoding="utf-8")
     ) as fil:
         items, skipped = partition(process(item) for item in json.load(fil))
-    items = cast(list[Item], list(items))
+    items = cast(list[RecipePlaylistItem], list(items))
     skipped = list(skipped)
 
     with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
