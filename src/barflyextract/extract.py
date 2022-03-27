@@ -3,10 +3,9 @@ import logging
 import re
 import sys
 import unidecode
-from typing import Iterable, Optional, TextIO, cast
+from typing import Iterable, Optional, TextIO
 
 from barflyextract.api import PlaylistItem
-from barflyextract.util import partition
 
 MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
@@ -71,12 +70,17 @@ def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
 def run() -> None:
     logging.basicConfig(level=logging.INFO)
 
+    items = []
+    skipped = []
     with (
         sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r", encoding="utf-8")
     ) as fil:
-        items, skipped = partition(process(item) for item in json.load(fil))
-    items = cast(list[RecipePlaylistItem], list(items))
-    skipped = list(skipped)
+        for item in json.load(fil):
+            processed = process(item)
+            if processed:
+                items.append(processed)
+            else:
+                skipped.append(item)
 
     with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
         print_markdown(outfile, items)
