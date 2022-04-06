@@ -67,20 +67,28 @@ def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
     }
 
 
+def process_scraped_items(
+    input_items: Iterable[PlaylistItem],
+) -> tuple[list[RecipePlaylistItem], list[PlaylistItem]]:
+    items: list[RecipePlaylistItem] = []
+    skipped: list[PlaylistItem] = []
+    for item in input_items:
+        processed = process(item)
+        if processed:
+            items.append(processed)
+        else:
+            skipped.append(item)
+
+    return (items, skipped)
+
+
 def run() -> None:
     logging.basicConfig(level=logging.INFO)
 
-    items = []
-    skipped = []
     with (
         sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r", encoding="utf-8")
     ) as fil:
-        for item in json.load(fil):
-            processed = process(item)
-            if processed:
-                items.append(processed)
-            else:
-                skipped.append(item)
+        items, skipped = process_scraped_items(json.load(fil))
 
     with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
         print_markdown(outfile, items)

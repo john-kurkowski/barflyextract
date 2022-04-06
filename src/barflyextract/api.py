@@ -41,19 +41,22 @@ def scrape_playlist_items(
                 return
 
 
-def run() -> None:
-    youtube = googleapiclient.discovery.build(
-        "youtube", "v3", developerKey=os.environ["API_KEY"]
-    )
+def scrape_user_uploads(
+    api_key: str, user_id: str
+) -> Generator[PlaylistItem, None, None]:
+    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
 
     request = youtube.channels().list(  # pylint: disable=no-member
-        id=TARGET_USER_ID, part="contentDetails"
+        id=user_id, part="contentDetails"
     )
     response = request.execute()
 
     playlist_id = response["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-    playlist = scrape_playlist_items(youtube, playlist_id)
+    return scrape_playlist_items(youtube, playlist_id)
 
+
+def run() -> None:
+    playlist = scrape_user_uploads(os.environ["API_KEY"], TARGET_USER_ID)
     with (sys.stdout if len(sys.argv) <= 1 else open(sys.argv[1], "w")) as outfile:
         print(json.dumps(list(playlist), indent=4), file=outfile)
 
