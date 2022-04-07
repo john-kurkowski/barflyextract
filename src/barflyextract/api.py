@@ -10,21 +10,17 @@ def scrape_playlist_items(youtube, playlist_id):
     items_per_page = 50
     items_yielded = 0
     max_items = 999
-    request_kwargs = dict(
-        maxResults=items_per_page, part="snippet", playlistId=playlist_id
-    )
+    request_kwargs = {
+        "maxResults": items_per_page,
+        "part": "snippet",
+        "playlistId": playlist_id,
+    }
 
-    request = youtube.playlistItems().list(**request_kwargs)
-    response = request.execute()
-    for item in response["items"]:
-        yield item["snippet"]
+    response = None
+    while not response or response.get("nextPageToken"):
+        if response:
+            request_kwargs["pageToken"] = response.get("nextPageToken")
 
-        items_yielded += 1
-        if items_yielded >= max_items:
-            return
-
-    while response.get("nextPageToken"):
-        request_kwargs.update({"pageToken": response.get("nextPageToken")})
         request = youtube.playlistItems().list(**request_kwargs)
         response = request.execute()
 
