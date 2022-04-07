@@ -34,6 +34,15 @@ Usage
     open build/recipes.html
 
 
+Testing
+=======
+
+.. code-block:: sh
+
+   python setup.py test
+
+
+
 Note
 ====
 
