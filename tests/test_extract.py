@@ -30,6 +30,11 @@ def test_process_happy_path_item(happy_path_item):
     )
 
 
+@pytest.mark.xfail  # TODO: test blocked paragraphs
+def test_process_blocked_paragraphs():  # TODO: fixture with blocked paragraphs
+    raise NotImplementedError()
+
+
 def test_process_blocked_item(blocked_item):
     result = barflyextract.extract.process(blocked_item)
     assert not result
