@@ -1,9 +1,8 @@
+import googleapiclient.discovery  # type: ignore[import]
 import json
 import os
 import sys
 from typing import Any, Generator, TypedDict
-
-import googleapiclient.discovery  # type: ignore[import]
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 

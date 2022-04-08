@@ -2,9 +2,10 @@
 https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
 """
 
+import pytest
+
 import io
 import os
-import pytest
 
 import barflyextract.api
 import barflyextract.extract
