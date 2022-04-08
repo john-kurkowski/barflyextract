@@ -22,21 +22,26 @@ cache:
 # services such as redis or postgres
 before_script:
   - python -v                                   # Print out Python version for debugging
-  # Setup git
-  - apt-get install git
-  - git config --global user.email "you@example.com"
-  - git config --global user.name "Your Name"
+  - pip install tox
+
+lint:
+  image: "python:3.10"
+  variables:
+    TOXENV: lint
+  script:
+  - tox
 
 test:
   image: "python:3.10"
   script:
-  - python setup.py test
+  - tox
 
 typecheck:
   image: "python:3.10"
+  variables:
+    TOXENV: typecheck
   script:
-  - pip install --editable '.[testing]'
-  - mypy --show-error-codes src/ tests/
+  - tox
 
 # This deploy job uses a simple deploy flow to Heroku, other providers, e.g. AWS Elastic Beanstalk
 # are supported too: https://github.com/travis-ci/dpl
