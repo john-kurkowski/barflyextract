@@ -33,6 +33,8 @@ lint:
 
 test:
   image: "python:3.10"
+  variables:
+    TOXENV: default
   script:
   - tox
 
