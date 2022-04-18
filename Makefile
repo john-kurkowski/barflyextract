@@ -9,7 +9,7 @@ clean:
 	rm -rf build/
 
 build/playlist.json:
-	python src/barflyextract/api.py $@.tmp
+	python src/barflyextract/datasource.py $@.tmp
 	mv $@.tmp $@
 
 build/recipes.html: build/recipes.md

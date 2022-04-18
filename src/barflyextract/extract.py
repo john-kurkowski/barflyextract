@@ -5,7 +5,7 @@ import sys
 import unidecode
 from typing import Iterable, Optional, TextIO
 
-from barflyextract.api import PlaylistItem
+from barflyextract.datasource import PlaylistItem
 
 MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
