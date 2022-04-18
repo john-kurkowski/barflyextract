@@ -39,7 +39,7 @@ Scrape the latest data to a file
 Update the database
 -------------------
 
-1. Enable Google Docs read/write access for `your app
+1. Enable Google Drive API access for `your app
    <https://console.cloud.google.com/apis/dashboard>`_.
 1. Download `your app's OAuth 2.0 Client ID
    <https://console.cloud.google.com/apis/credentials>`_ to a
