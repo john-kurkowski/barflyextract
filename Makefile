@@ -19,3 +19,7 @@ build/recipes.html: build/recipes.md
 build/recipes.md: build/playlist.json
 	python src/barflyextract/extract.py $< $@.tmp
 	mv $@.tmp $@
+
+.PHONY: update-db
+update-db: build/recipes.html
+	python src/barflyextract/db.py $<
