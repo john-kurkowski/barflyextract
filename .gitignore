@@ -47,3 +47,7 @@ MANIFEST
 
 # Per-project virtualenvs
 .venv*/
+
+# Private keys
+credentials.json
+token.json
