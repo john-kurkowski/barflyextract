@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import googleapiclient.discovery  # type: ignore[import]
 
@@ -45,7 +46,8 @@ def run():
     playlist_id = response["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
     playlist = scrape_playlist_items(youtube, playlist_id)
 
-    print(json.dumps(list(playlist), indent=4))
+    with (sys.stdout if len(sys.argv) <= 1 else open(sys.argv[1], "w")) as outfile:
+        print(json.dumps(list(playlist), indent=4), file=outfile)
 
 
 if __name__ == "__main__":

@@ -13,14 +13,14 @@ TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 URL_RE = re.compile(r"\bhttps?://")
 
 
-def print_markdown(items):
+def print_markdown(fil, items):
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
 
     for item in sorted_items:
-        print(f"# {item['title']}")
-        print()
-        print(item["recipe"])
-        print()
+        print(f"# {item['title']}", file=fil)
+        print(file=fil)
+        print(item["recipe"], file=fil)
+        print(file=fil)
 
 
 def process(item):
@@ -64,12 +64,13 @@ def process(item):
 def run():
     logging.basicConfig(level=logging.INFO)
 
-    with sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r") as fil:
+    with (sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r")) as fil:
         items, skipped = partition(process(item) for item in json.load(fil))
     items = list(items)
     skipped = list(skipped)
 
-    print_markdown(items)
+    with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
+        print_markdown(outfile, items)
 
     logging.info(
         """Collected %d recipes. Skipped %d items.""", len(items), len(skipped)
