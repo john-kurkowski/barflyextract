@@ -7,7 +7,7 @@ import unidecode
 
 from barflyextract.util import partition
 
-MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml)", re.MULTILINE)
+MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 URL_RE = re.compile(r"\bhttps?://")
