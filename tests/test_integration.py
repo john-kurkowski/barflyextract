@@ -7,13 +7,13 @@ import pytest
 import io
 import os
 
-import barflyextract.api
+import barflyextract.datasource
 import barflyextract.extract
 
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
 def test_entire_pipeline(capsys, monkeypatch):
-    barflyextract.api.run()
+    barflyextract.datasource.run()
     step_one_output, _ = capsys.readouterr()
     assert step_one_output
 
