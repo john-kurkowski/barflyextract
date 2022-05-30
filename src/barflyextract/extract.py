@@ -2,10 +2,10 @@ import json
 import logging
 import re
 import sys
-
 import unidecode
+from typing import Iterable, Optional, TextIO
 
-from barflyextract.util import partition
+from barflyextract.api import PlaylistItem
 
 MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
@@ -13,7 +13,11 @@ TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 URL_RE = re.compile(r"\bhttps?://")
 
 
-def print_markdown(fil, items):
+class RecipePlaylistItem(PlaylistItem):
+    recipe: str
+
+
+def print_markdown(fil: TextIO, items: Iterable[RecipePlaylistItem]) -> None:
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
 
     for item in sorted_items:
@@ -23,7 +27,7 @@ def print_markdown(fil, items):
         print(file=fil)
 
 
-def process(item):
+def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
     blocked_types = ("Home Bar", "Tasting")
     is_blocked_type = any(item["title"].startswith(s) for s in blocked_types)
     if is_blocked_type:
@@ -38,8 +42,8 @@ def process(item):
         logging.debug(item["description"])
         return None
 
-    def is_blocked_para(para):
-        return URL_RE.search(para)
+    def is_blocked_para(para: str) -> bool:
+        return bool(URL_RE.search(para))
 
     recipe_start_i, recipe_start = maybe_recipe_starts
     recipe_remainder = paras[recipe_start_i + 1 :]
@@ -56,18 +60,27 @@ def process(item):
     name_match = TYPE_NAME_RE.match(item["title"])
     title = name_match.group("name") if name_match else item["title"]
 
-    item["title"] = title
-    item["recipe"] = "\n\n".join(recipe)
-    return item
+    return {
+        "description": item["description"],
+        "recipe": "\n\n".join(recipe),
+        "title": title,
+    }
 
 
-def run():
+def run() -> None:
     logging.basicConfig(level=logging.INFO)
 
-    with (sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r")) as fil:
-        items, skipped = partition(process(item) for item in json.load(fil))
-    items = list(items)
-    skipped = list(skipped)
+    items = []
+    skipped = []
+    with (
+        sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r", encoding="utf-8")
+    ) as fil:
+        for item in json.load(fil):
+            processed = process(item)
+            if processed:
+                items.append(processed)
+            else:
+                skipped.append(item)
 
     with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
         print_markdown(outfile, items)
