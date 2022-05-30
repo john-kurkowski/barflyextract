@@ -1,8 +1,10 @@
 DIRS=build
 $(info $(shell mkdir -p $(DIRS)))
 
+.PHONY: all
 all: build/recipes.html
 
+.PHONY: clean
 clean:
 	rm -rf build/
 

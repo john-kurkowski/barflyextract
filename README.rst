@@ -34,17 +34,10 @@ Usage
     open build/recipes.html
 
 
-Testing
-=======
-
-.. code-block:: sh
-
-   python setup.py test
-
-
+For more commands and details, see `CONTRIBUTING <./CONTRIBUTING.rst>`_.
 
 Note
 ====
 
-This project has been set up using PyScaffold 3.2.1. For details and usage
+This project has been set up using PyScaffold 4.2.1. For details and usage
 information on PyScaffold see https://pyscaffold.org/.

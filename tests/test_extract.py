@@ -1,10 +1,10 @@
 """Unit tests for parsing results retrieved from the API."""
 
+import pytest
+
 import re
 import sys
 import textwrap
-
-import pytest
 
 import barflyextract.extract
 from barflyextract.extract import RecipePlaylistItem
