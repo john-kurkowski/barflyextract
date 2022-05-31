@@ -13,6 +13,8 @@ repos:
   - id: check-ast
   - id: check-json
   - id: check-merge-conflict
+    exclude:
+      README.rst
   - id: check-xml
   - id: check-yaml
   - id: debug-statements
