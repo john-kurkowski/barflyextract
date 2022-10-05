@@ -13,6 +13,7 @@ import barflyextract.extract
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
 def test_entire_pipeline(capsys, monkeypatch):
+    monkeypatch.setattr("sys.argv", ["my_cmd"])
     barflyextract.datasource.run()
     step_one_output, _ = capsys.readouterr()
     assert step_one_output
