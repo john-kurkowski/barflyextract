@@ -6,6 +6,7 @@ import pytest
 
 import io
 import os
+import textwrap
 
 import barflyextract.datasource
 import barflyextract.extract
@@ -24,5 +25,14 @@ def test_entire_pipeline(capsys, monkeypatch):
     step_two_output, _ = capsys.readouterr()
     assert step_two_output
 
-    expected_startswith = "# 10x Easy Vodka Drinks\n\nAppletini\n1.5oz (45ml) Vodka"
+    expected_startswith = textwrap.dedent(
+        """
+        # ☀️ Summer Crusher! Margarita Negra
+
+        Recipe
+        Margarita Negra
+        1oz (30ml) Tequila Blanco
+        1oz (30ml) Mr Black Coffee Liqueur
+        """
+    ).strip()
     assert step_two_output[: len(expected_startswith)] == expected_startswith
