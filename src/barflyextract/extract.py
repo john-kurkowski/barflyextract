@@ -7,6 +7,7 @@ from typing import Iterable, Optional, TextIO
 
 from barflyextract.datasource import PlaylistItem
 
+IGNORED_LINE_RE = re.compile(r"(here.*spec)", re.IGNORECASE)
 MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
@@ -42,13 +43,27 @@ def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
         logging.debug(item["description"])
         return None
 
+    def is_blocked_line(line: str) -> bool:
+        return bool(IGNORED_LINE_RE.search(line))
+
     def is_blocked_para(para: str) -> bool:
         return bool(URL_RE.search(para))
 
+    def format_para(para: str) -> str:
+        lines = [
+            stripped
+            for line in para.splitlines()
+            if (stripped := line.strip()) and stripped and not is_blocked_line(stripped)
+        ]
+
+        # TODO
+
+        return "\n".join(lines)
+
     recipe_start_i, recipe_start = maybe_recipe_starts
     recipe_remainder = paras[recipe_start_i + 1 :]
-    recipe = [recipe_start] + [
-        para for para in recipe_remainder if not is_blocked_para(para)
+    recipe = [format_para(recipe_start)] + [
+        format_para(para) for para in recipe_remainder if not is_blocked_para(para)
     ]
     logging.debug(
         """Recipe found in "%s" at paragraph %d. Taking it and remaining %d paragraphs.""",
