@@ -3,6 +3,7 @@
 
 import googleapiclient.discovery  # type: ignore[import]
 import os
+import sys
 from google.auth.transport.requests import Request  # type: ignore[import]
 from google.oauth2.credentials import Credentials  # type: ignore[import]
 from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore[import]
@@ -41,9 +42,10 @@ def get_or_prompt_creds() -> Credentials:
 
 
 def main() -> None:
-    # TODO: update the shared Google Doc with the latest recipe HTML. Only
-    #       modify this function.
-    pass
+    creds = get_or_prompt_creds()
+    filename = sys.argv[1]
+    media = MediaFileUpload(filename, mimetype="text/html", resumable=True)
+    update_doc(creds, TARGET_DOCUMENT_ID, media)
 
 
 if __name__ == "__main__":
