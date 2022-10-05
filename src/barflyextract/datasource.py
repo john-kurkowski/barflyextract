@@ -2,7 +2,8 @@ import googleapiclient.discovery  # type: ignore[import]
 import json
 import os
 import sys
-from typing import Any, Generator, TypedDict
+from contextlib import AbstractContextManager, nullcontext
+from typing import Any, Generator, TextIO, TypedDict
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 
@@ -56,7 +57,10 @@ def scrape_user_uploads(
 
 def run() -> None:
     playlist = scrape_user_uploads(os.environ["API_KEY"], TARGET_USER_ID)
-    with (sys.stdout if len(sys.argv) <= 1 else open(sys.argv[1], "w")) as outfile:
+    cm: TextIO | AbstractContextManager[TextIO] = (
+        nullcontext(sys.stdout) if len(sys.argv) <= 1 else open(sys.argv[1], "w")
+    )
+    with cm as outfile:
         print(json.dumps(list(playlist), indent=4), file=outfile)
 
 

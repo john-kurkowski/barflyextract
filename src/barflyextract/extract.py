@@ -3,6 +3,7 @@ import logging
 import re
 import sys
 import unidecode
+from contextlib import AbstractContextManager, nullcontext
 from typing import Iterable, Optional, TextIO
 
 from barflyextract.datasource import PlaylistItem
@@ -105,7 +106,10 @@ def run() -> None:
     ) as fil:
         items, skipped = process_scraped_items(json.load(fil))
 
-    with (sys.stdout if len(sys.argv) <= 2 else open(sys.argv[2], "w")) as outfile:
+    cm: TextIO | AbstractContextManager[TextIO] = (
+        nullcontext(sys.stdout) if len(sys.argv) <= 2 else open(sys.argv[2], "w")
+    )
+    with cm as outfile:
         print_markdown(outfile, items)
 
     logging.info(
