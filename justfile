@@ -15,5 +15,12 @@ md: playlist
 update-db: html
   python src/barflyextract/db.py build/recipes.html
 
+# Test recipes
+
+test:
+  tox --parallel
+
+# Private recipes
+
 @_build:
   mkdir -p build
