@@ -11,7 +11,7 @@ from barflyextract.datasource import PlaylistItem
 from barflyextract.extract import RecipePlaylistItem
 
 
-def test_process_happy_path_item(happy_path_item):
+def test_process_happy_path_item(happy_path_item: PlaylistItem) -> None:
     result = barflyextract.extract.process(happy_path_item)
     assert result
     assert result["title"] != happy_path_item["title"]
@@ -31,7 +31,7 @@ def test_process_happy_path_item(happy_path_item):
     )
 
 
-def test_process_multi_recipe_item(multi_recipe_item):
+def test_process_multi_recipe_item(multi_recipe_item: PlaylistItem) -> None:
     result = barflyextract.extract.process(multi_recipe_item)
     assert result
     assert result["title"] == "Celebrating National Applejack Month with 5 Cocktails!"
@@ -92,26 +92,28 @@ def test_process_multi_recipe_item(multi_recipe_item):
 
 
 @pytest.mark.xfail  # TODO: test blocked paragraphs
-def test_process_blocked_paragraphs():  # TODO: fixture with blocked paragraphs
+def test_process_blocked_paragraphs() -> None:  # TODO: fixture with blocked paragraphs
     raise NotImplementedError()
 
 
-def test_process_blocked_item(blocked_item):
+def test_process_blocked_item(blocked_item: PlaylistItem) -> None:
     result = barflyextract.extract.process(blocked_item)
     assert not result
 
 
-def test_blocked_line_item(blocked_line_item):
+def test_blocked_line_item(blocked_line_item: PlaylistItem) -> None:
     result = barflyextract.extract.process(blocked_line_item)
     assert result
 
 
-def test_process_no_recipe_item(no_recipe_item):
+def test_process_no_recipe_item(no_recipe_item: PlaylistItem) -> None:
     result = barflyextract.extract.process(no_recipe_item)
     assert not result
 
 
-def test_process_scraped_items(happy_path_item, blocked_item):
+def test_process_scraped_items(
+    happy_path_item: PlaylistItem, blocked_item: PlaylistItem
+) -> None:
     input_items = [
         happy_path_item,
         blocked_item,
@@ -124,7 +126,7 @@ def test_process_scraped_items(happy_path_item, blocked_item):
     assert [item["title"] for item in passed] == ["Bobby Burns"] * 2
 
 
-def test_print_markdown(capsys):
+def test_print_markdown(capsys: pytest.CaptureFixture) -> None:
     input_items: list[RecipePlaylistItem] = [
         {"title": "One", "description": "doesnt matter", "recipe": "Two"},
         {"title": "Three", "description": "doesnt matter", "recipe": "Four"},
@@ -295,13 +297,17 @@ def blocked_line_item() -> PlaylistItem:
 
 
 @pytest.fixture
-def blocked_item(happy_path_item):
-    return happy_path_item | {"title": "Tasting Notes: Bobby Burns"}
+def blocked_item(happy_path_item: PlaylistItem) -> PlaylistItem:
+    copy = happy_path_item.copy()
+    copy["title"] = "Tasting Notes: Bobby Burns"
+    return copy
 
 
 @pytest.fixture
-def no_recipe_item(happy_path_item):
+def no_recipe_item(happy_path_item: PlaylistItem) -> PlaylistItem:
     no_recipe = re.sub(
         r"2oz.*", "", happy_path_item["description"], flags=re.DOTALL | re.MULTILINE
     )
-    return happy_path_item | {"description": no_recipe}
+    copy = happy_path_item.copy()
+    copy["description"] = no_recipe
+    return copy

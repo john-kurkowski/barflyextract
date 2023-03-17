@@ -3,5 +3,5 @@
 import barflyextract.datasource
 
 
-def test_at_least_one_test_case():
+def test_at_least_one_test_case() -> None:
     assert barflyextract.datasource
