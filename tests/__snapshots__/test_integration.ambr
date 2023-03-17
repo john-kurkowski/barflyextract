@@ -1,0 +1,15 @@
+# serializer version: 1
+# name: test_entire_pipeline
+  list([
+    '# 🧀 How did the Parmesan Espresso Martini happen? And what does an Olive Oil Espresso Taste like?',
+    '',
+    '## Oleato Espresso Martini',
+    '',
+    '* 2oz (60ml) Vodka',
+    '* 1oz (30ml)Espresso',
+    '* 1/2oz (15ml) Simple Syrup',
+    '* Oleato Golden Foam Garnish',
+    '',
+    '## Oleato Golden Foam',
+  ])
+# ---

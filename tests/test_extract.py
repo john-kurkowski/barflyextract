@@ -3,92 +3,30 @@
 import pytest
 
 import re
+import syrupy
 import sys
-import textwrap
 
 import barflyextract.extract
 from barflyextract.datasource import PlaylistItem
 from barflyextract.extract import RecipePlaylistItem
 
 
-def test_process_happy_path_item(happy_path_item: PlaylistItem) -> None:
+def test_process_happy_path_item(
+    happy_path_item: PlaylistItem, snapshot: syrupy.SnapshotAssertion
+) -> None:
     result = barflyextract.extract.process(happy_path_item)
     assert result
     assert result["title"] != happy_path_item["title"]
-    assert result["title"] == "Bobby Burns"
-    assert result["description"] == happy_path_item["description"]
-    assert (
-        result["recipe"]
-        == textwrap.dedent(
-            """
-            * 2oz (60ml) Scotch Whiskey
-            * .75oz (22.5ml) Sweet Vermouth
-            * .25oz (7.5ml) Bènèdictine
-            * 2 Dashes Angostura Bitters
-            * Lemon Twist
-            """
-        ).strip()
-    )
+    assert result == snapshot
 
 
-def test_process_multi_recipe_item(multi_recipe_item: PlaylistItem) -> None:
+def test_process_multi_recipe_item(
+    multi_recipe_item: PlaylistItem, snapshot: syrupy.SnapshotAssertion
+) -> None:
     result = barflyextract.extract.process(multi_recipe_item)
     assert result
-    assert result["title"] == "Celebrating National Applejack Month with 5 Cocktails!"
     assert result["description"] == multi_recipe_item["description"]
-    assert (
-        result["recipe"]
-        == textwrap.dedent(
-            """
-            ## Pall Mall
-
-            * 1oz (30ml)  Applejack
-            * 1oz (30ml) Rye
-            * .75oz (22.5ml) Lemon
-            * .75oz (22.5ml) Grenadine
-            * 2 Orange Slices
-            * 2 dashes Angostura Bitters
-            * No Garnish
-
-            ## Autumn in Jersey
-
-            * 2oz (60ml) Applejack
-            * .75oz (22.5ml) Lemon
-            * .75oz (22.5ml) Orgeat
-            * 2 Dashes Angostura Bitters
-            * Mint Sprig Garnish
-
-            ## Black Mamba
-
-            * 1oz (30ml) Gin
-            * 1oz Mulled Wine Syrup
-            * .5oz (15ml) Applejack
-            * .75oz (22.5ml) Lemon Juice
-            * .25oz Fernet Branca
-
-            For Mulled Wine Syrup combine .5 Cups House Mulling Spices ( Mix Allspice berries, Cardamom pods, Cinnamon Sticks, Clove, dried orange peel, dried lemon peel and Corriander Seed) with 1 cup Demerara Sugar and 1 Cup Rich wine such as Merlot or Cabernet. Simmer for ten minutes until reduces slightly, cool and strain our solids. Keeps 2 weeks).
-
-            ## Legends Of The Fall
-
-            * 1.5oz (45ml) Applejack
-            * .5oz (15ml) Rye Whiskey
-            * 1 Heavy Barspoon Falernum
-            * 1 Dash Allspice Dram
-            * On Rocks, Orange and Lemon Twist
-
-            ## Garden State Julep
-
-            * 2oz (60ml) Applejack
-            * .75oz (22.5ml) Lemon Sherbet
-            * 3oz (90ml) Dry Rosé
-            * Pinch Of Mint
-            * Pinch Sea Salt
-            * Garnish Mint Sprig/Red Berries/Lemon Wheel
-
-            To make Lemon Sherbet coat the peels of 4 Lemons in .5 cups sugar, muddle Peels to release oils and let sit at least 3 hours but preferably overnight. Then add 12oz of Lemon Juice. Heat gently in a  pot and stir slowly (DO NOT SIMMER OR BRING TO BOIL) once sugar is fully dissolved, remove from heat, allow to cool and strain out solids. Resulting syrup lasts 2 to 3 weeks in the refrigerator.
-            """
-        ).strip()
-    )
+    assert result == snapshot
 
 
 @pytest.mark.xfail  # TODO: test blocked paragraphs
@@ -126,28 +64,16 @@ def test_process_scraped_items(
     assert [item["title"] for item in passed] == ["Bobby Burns"] * 2
 
 
-def test_print_markdown(capsys: pytest.CaptureFixture) -> None:
+def test_print_markdown(
+    capsys: pytest.CaptureFixture, snapshot: syrupy.SnapshotAssertion
+) -> None:
     input_items: list[RecipePlaylistItem] = [
         {"title": "One", "description": "doesnt matter", "recipe": "Two"},
         {"title": "Three", "description": "doesnt matter", "recipe": "Four"},
     ]
     barflyextract.extract.print_markdown(sys.stdout, input_items)
     output, _ = capsys.readouterr()
-    assert (
-        output
-        == textwrap.dedent(
-            """
-            # One
-
-            Two
-
-            # Three
-
-            Four
-
-            """
-        ).lstrip()
-    )
+    assert output == snapshot
 
 
 @pytest.fixture

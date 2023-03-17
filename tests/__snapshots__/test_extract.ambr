@@ -1,0 +1,180 @@
+# serializer version: 1
+# name: test_print_markdown
+  '''
+  # One
+  
+  Two
+  
+  # Three
+  
+  Four
+  
+  
+  '''
+# ---
+# name: test_process_happy_path_item
+  dict({
+    'description': '''
+      This cocktail wasn't actually named after Scottish poet Robert Burns (1759 - 1796) that doesn't stop the Scottish from  drinking this cocktail to his honor every January 25th during a celebration known as "Burns Night". 
+      
+      This Scotch Based Riff on a Manhattan (basically a Rob Roy with splash of Benedictine) was first published by Harry Craddock in his Savoy Cocktail book published in 1930. The drink most definitely predates Craddock, and it is possible we'll never know it's true origin. But after Craddock printed it, it definitely became popular as evidenced by it's inclusion in the books: Old Waldorf Astoria Bar Days published in 1931 by Albert Stevens Crocket and again by David A. Embury in his 1948 book The Fine Art Of Mixing Drinks. 
+      
+      Here’s Links to the gear I use in this episode:
+      Graduated Jigger: https://amzn.to/2Op81j6
+      Barfly Julep Strainer: https://amzn.to/2T9KKkN
+      Barfly Stirring Spoon: https://amzn.to/2Oy65VX
+      Japanese Bitters Dasher: https://amzn.to/2OtPzGn
+      Cocktail Kingdom Mixing Glass: https://amzn.to/2FiIlRX
+      OXO Y Peeler: https://amzn.to/2RY7xQ7
+      Angostura Bitters: https://amzn.to/2J5tqcf
+      
+      We are proud that our official apron sponsor is Stagger Lee Goods. Alfred Ramos hand stitches each of these amazing quality aprons in his Northern California workshop. He Does custom work and has aprons for just about every position in a restaurant and bar so do yourself a favor and check him out:
+      https://www.staggerleegoods.com
+      
+      If you are interested in helping us offset the cost of production you should check out our Patreon page which has a bunch of great perks and goes a long way to helping us bring you quality content. You can find that here:
+      https://www.patreon.com/theeducatedbarfly
+      
+      Here's The Specs:
+      
+      2oz (60ml) Scotch Whiskey
+      .75oz (22.5ml) Sweet Vermouth
+      .25oz (7.5ml) Bènèdictine
+      2 Dashes Angostura Bitters
+      Lemon Twist
+    ''',
+    'recipe': '''
+      * 2oz (60ml) Scotch Whiskey
+      * .75oz (22.5ml) Sweet Vermouth
+      * .25oz (7.5ml) Bènèdictine
+      * 2 Dashes Angostura Bitters
+      * Lemon Twist
+    ''',
+    'title': 'Bobby Burns',
+  })
+# ---
+# name: test_process_multi_recipe_item
+  dict({
+    'description': '''
+      Not only is it officially fall but October is National Applejack Month and we decided to celebrate with five distinctive cocktails to help you ring in the Holiday Season!
+      
+      Applejack, in short, is American Apple Brandy and it is the first American Distilled Spirit. Some may argue that we were distilling Rum beforehand, but I would argue back that Rum is a product of the Caribbean  and therefore not an American Product. The term Applejack comes from the Colonial method of making Apple Brandy called Jacking, the process of freeze fermenting cider then removing the ice and increasing alcohol content. The Story of Applejack and the story of the Laird's family are intertwined (you'll notice I'm using Laird's Bonded Applejack). Since 1698 something like 12 generations of the Lairds family have been making Applejack in Monmouth County New Jersey (hence it's nickname Jersey Lightning). The first Laird, William landed in New Jersey from Scotland and was believed to be a distiller by trade, when he looked around at available product to distill he landed on apples which were plentiful in the region. The weather and soil wasn't hospitable to Rye, Corn or Barley and Whiskey had not yet begun pouring through the Cumberland Gap, so Apple Cider and then Applejack it was! Today Laird's & Co. is the oldest licensed distillery in the United States and it is still family Run.
+      
+      Here's  Links to the tools I use in this episode:
+      Barfly Shaking Set (Gold): https://amzn.to/2WAhHIg
+      Barfly Copper Measuring Cup: https://amzn.to/2BA24Yk
+      Barfly Hawthorn Strainer: https://amzn.to/2OkFZ8v
+      Barfly Fine Strainer: https://amzn.to/2X44wD8
+      
+      If you like our channel, please click and subscribe
+      https://tinyurl.com/SubBarfly
+      
+      If you guys want to check out our full amazon store you can do so here: https://www.amazon.com/shop/theeducatedbarfly
+      
+      We are happy to announce that we are officially sponsored by Barfly Mixology Gear. Barfly makes very high quality professional bar equipment. Their barware essentials and accessories are designed to deliver optimal appearance, temperature consistency and proportion in every glass so you can achieve masterful results. Definitely check them out at: https://www.barflybymercer.com/home/
+      
+      We are proud that our official apron sponsor is Stagger Lee Goods. Alfred Ramos hand stitches each of these amazing quality aprons in his Northern California workshop. He Does custom work and has aprons for just about every position in a restaurant and bar so do yourself a favor and check him out:
+      https://www.staggerleegoods.com
+      
+      We have a discount code with Stagger Lee right now for 20% off your order just type: BARFLYSLG20 at check out.
+      
+      If you are interested in helping us offset the cost of production you should check out our Patreon page which has a bunch of great perks and goes a long way to helping us bring you quality content. You can find that here:
+      https://www.patreon.com/theeducatedbarfly
+      
+      Instagram: https://www.instagram.com/theeducatedbarfly
+      Facebook: https://www.facebook.com/theeducatedbarfly
+      For T-Shirts: https://teespring.com/stores/the-educated-barfly
+      
+      Here's The Specs For Each Drink:
+       Pall Mall
+      1oz (30ml)  Applejack
+      1oz (30ml) Rye
+      .75oz (22.5ml) Lemon
+      .75oz (22.5ml) Grenadine
+      2 Orange Slices
+      2 dashes Angostura Bitters
+      No Garnish
+      
+      Autumn in Jersey
+      2oz (60ml) Applejack
+      .75oz (22.5ml) Lemon
+      .75oz (22.5ml) Orgeat
+      2 Dashes Angostura Bitters
+      Mint Sprig Garnish
+      
+      Black Mamba
+      1oz (30ml) Gin
+      1oz Mulled Wine Syrup
+      .5oz (15ml) Applejack
+      .75oz (22.5ml) Lemon Juice
+      .25oz Fernet Branca
+      
+      For Mulled Wine Syrup combine .5 Cups House Mulling Spices ( Mix Allspice berries, Cardamom pods, Cinnamon Sticks, Clove, dried orange peel, dried lemon peel and Corriander Seed) with 1 cup Demerara Sugar and 1 Cup Rich wine such as Merlot or Cabernet. Simmer for ten minutes until reduces slightly, cool and strain our solids. Keeps 2 weeks).
+      
+      Legends Of The Fall
+      1.5oz (45ml) Applejack
+      .5oz (15ml) Rye Whiskey
+      1 Heavy Barspoon Falernum
+      1 Dash Allspice Dram
+      On Rocks, Orange and Lemon Twist
+      
+      Garden State Julep
+      2oz (60ml) Applejack
+      .75oz (22.5ml) Lemon Sherbet
+      3oz (90ml) Dry Rosé
+      Pinch Of Mint
+      Pinch Sea Salt
+      Garnish Mint Sprig/Red Berries/Lemon Wheel
+      
+      To make Lemon Sherbet coat the peels of 4 Lemons in .5 cups sugar, muddle Peels to release oils and let sit at least 3 hours but preferably overnight. Then add 12oz of Lemon Juice. Heat gently in a  pot and stir slowly (DO NOT SIMMER OR BRING TO BOIL) once sugar is fully dissolved, remove from heat, allow to cool and strain out solids. Resulting syrup lasts 2 to 3 weeks in the refrigerator.
+    ''',
+    'recipe': '''
+      ## Pall Mall
+      
+      * 1oz (30ml)  Applejack
+      * 1oz (30ml) Rye
+      * .75oz (22.5ml) Lemon
+      * .75oz (22.5ml) Grenadine
+      * 2 Orange Slices
+      * 2 dashes Angostura Bitters
+      * No Garnish
+      
+      ## Autumn in Jersey
+      
+      * 2oz (60ml) Applejack
+      * .75oz (22.5ml) Lemon
+      * .75oz (22.5ml) Orgeat
+      * 2 Dashes Angostura Bitters
+      * Mint Sprig Garnish
+      
+      ## Black Mamba
+      
+      * 1oz (30ml) Gin
+      * 1oz Mulled Wine Syrup
+      * .5oz (15ml) Applejack
+      * .75oz (22.5ml) Lemon Juice
+      * .25oz Fernet Branca
+      
+      For Mulled Wine Syrup combine .5 Cups House Mulling Spices ( Mix Allspice berries, Cardamom pods, Cinnamon Sticks, Clove, dried orange peel, dried lemon peel and Corriander Seed) with 1 cup Demerara Sugar and 1 Cup Rich wine such as Merlot or Cabernet. Simmer for ten minutes until reduces slightly, cool and strain our solids. Keeps 2 weeks).
+      
+      ## Legends Of The Fall
+      
+      * 1.5oz (45ml) Applejack
+      * .5oz (15ml) Rye Whiskey
+      * 1 Heavy Barspoon Falernum
+      * 1 Dash Allspice Dram
+      * On Rocks, Orange and Lemon Twist
+      
+      ## Garden State Julep
+      
+      * 2oz (60ml) Applejack
+      * .75oz (22.5ml) Lemon Sherbet
+      * 3oz (90ml) Dry Rosé
+      * Pinch Of Mint
+      * Pinch Sea Salt
+      * Garnish Mint Sprig/Red Berries/Lemon Wheel
+      
+      To make Lemon Sherbet coat the peels of 4 Lemons in .5 cups sugar, muddle Peels to release oils and let sit at least 3 hours but preferably overnight. Then add 12oz of Lemon Juice. Heat gently in a  pot and stir slowly (DO NOT SIMMER OR BRING TO BOIL) once sugar is fully dissolved, remove from heat, allow to cool and strain out solids. Resulting syrup lasts 2 to 3 weeks in the refrigerator.
+    ''',
+    'title': 'Celebrating National Applejack Month with 5 Cocktails!',
+  })
+# ---

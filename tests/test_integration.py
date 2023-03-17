@@ -6,7 +6,7 @@ import pytest
 
 import io
 import os
-import textwrap
+import syrupy
 
 import barflyextract.datasource
 import barflyextract.extract
@@ -14,7 +14,9 @@ import barflyextract.extract
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
 def test_entire_pipeline(
-    capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
+    capsys: pytest.CaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+    snapshot: syrupy.SnapshotAssertion,
 ) -> None:
     monkeypatch.setattr("sys.argv", ["my_cmd"])
     barflyextract.datasource.run()
@@ -26,15 +28,4 @@ def test_entire_pipeline(
     barflyextract.extract.run()
     step_two_output, _ = capsys.readouterr()
     assert step_two_output
-
-    expected_startswith = textwrap.dedent(
-        """
-        # ☀️ Summer Crusher! Margarita Negra
-
-        Recipe
-        Margarita Negra
-        1oz (30ml) Tequila Blanco
-        1oz (30ml) Mr Black Coffee Liqueur
-        """
-    ).strip()
-    assert step_two_output[: len(expected_startswith)] == expected_startswith
+    assert step_two_output.splitlines()[:10] == snapshot

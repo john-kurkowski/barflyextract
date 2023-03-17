@@ -9,6 +9,7 @@ repos:
   rev: v4.2.0
   hooks:
   - id: trailing-whitespace
+    exclude: ambr
   - id: check-added-large-files
   - id: check-ast
   - id: check-json
