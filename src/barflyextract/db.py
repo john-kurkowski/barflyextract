@@ -15,7 +15,7 @@ TARGET_DOCUMENT_ID = "1FyWaqxkr7JADUOpzQInIIkr9xOG4rjbXmWqpvgR7bag"
 
 def update_doc(creds: Credentials, doc_id: str, media: MediaFileUpload) -> None:
     service = googleapiclient.discovery.build("drive", "v3", credentials=creds)
-    files = service.files()  # pylint: disable=no-member
+    files = service.files()
     files.update(fileId=doc_id, media_body=media).execute()
 
 

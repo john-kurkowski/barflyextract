@@ -46,9 +46,7 @@ def scrape_user_uploads(
 ) -> Generator[PlaylistItem, None, None]:
     youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
 
-    request = youtube.channels().list(  # pylint: disable=no-member
-        id=user_id, part="contentDetails"
-    )
+    request = youtube.channels().list(id=user_id, part="contentDetails")
     response = request.execute()
 
     playlist_id = response["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
