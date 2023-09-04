@@ -7,3 +7,23 @@ build-backend = "setuptools.build_meta"
 # For smarter version schemes and other configuration options,
 # check out https://github.com/pypa/setuptools_scm
 version_scheme = "no-guess-dev"
+
+[tool.ruff]
+select = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "I",
+  "N",
+  "UP",
+  "W",
+]
+ignore = [
+  "E501", # line too long; if Black does its job, not worried about the rare long line
+]
+
+[tool.ruff.pydocstyle]
+convention = "pep257"

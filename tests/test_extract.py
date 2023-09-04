@@ -1,12 +1,11 @@
 """Unit tests for parsing results retrieved from the API."""
 
-import pytest
-
 import re
-import syrupy
 import sys
 
 import barflyextract.extract
+import pytest
+import syrupy
 from barflyextract.datasource import PlaylistItem
 from barflyextract.extract import RecipePlaylistItem
 
@@ -14,6 +13,7 @@ from barflyextract.extract import RecipePlaylistItem
 def test_process_happy_path_item(
     happy_path_item: PlaylistItem, snapshot: syrupy.SnapshotAssertion
 ) -> None:
+    """Test that a happy path item is processed correctly."""
     result = barflyextract.extract.process(happy_path_item)
     assert result
     assert result["title"] != happy_path_item["title"]
@@ -23,6 +23,7 @@ def test_process_happy_path_item(
 def test_process_multi_recipe_item(
     multi_recipe_item: PlaylistItem, snapshot: syrupy.SnapshotAssertion
 ) -> None:
+    """Test that an item with multiple recipes is correctly processed."""
     result = barflyextract.extract.process(multi_recipe_item)
     assert result
     assert result["description"] == multi_recipe_item["description"]
@@ -31,20 +32,24 @@ def test_process_multi_recipe_item(
 
 @pytest.mark.xfail  # TODO: test blocked paragraphs
 def test_process_blocked_paragraphs() -> None:  # TODO: fixture with blocked paragraphs
+    """TODO."""
     raise NotImplementedError()
 
 
 def test_process_blocked_item(blocked_item: PlaylistItem) -> None:
+    """Test that a blocked item is not processed."""
     result = barflyextract.extract.process(blocked_item)
     assert not result
 
 
 def test_blocked_line_item(blocked_line_item: PlaylistItem) -> None:
+    """Test that an item with blocked lines is successfully processed."""
     result = barflyextract.extract.process(blocked_line_item)
     assert result
 
 
 def test_process_no_recipe_item(no_recipe_item: PlaylistItem) -> None:
+    """Test that an item with no recipe is not processed."""
     result = barflyextract.extract.process(no_recipe_item)
     assert not result
 
@@ -52,6 +57,7 @@ def test_process_no_recipe_item(no_recipe_item: PlaylistItem) -> None:
 def test_process_scraped_items(
     happy_path_item: PlaylistItem, blocked_item: PlaylistItem
 ) -> None:
+    """Test that scraped items are correctly split into passed and skipped."""
     input_items = [
         happy_path_item,
         blocked_item,
@@ -67,6 +73,7 @@ def test_process_scraped_items(
 def test_print_markdown(
     capsys: pytest.CaptureFixture, snapshot: syrupy.SnapshotAssertion
 ) -> None:
+    """Test that a list of RecipePlaylistItems is correctly printed."""
     input_items: list[RecipePlaylistItem] = [
         {"title": "One", "description": "doesnt matter", "recipe": "Two"},
         {"title": "Three", "description": "doesnt matter", "recipe": "Four"},
@@ -78,6 +85,7 @@ def test_print_markdown(
 
 @pytest.fixture
 def happy_path_item() -> PlaylistItem:
+    """Return a typical playlist item with a recipe."""
     return {
         "title": "Master The Classics: Bobby Burns",
         "description": (
@@ -115,6 +123,7 @@ def happy_path_item() -> PlaylistItem:
 
 @pytest.fixture
 def multi_recipe_item() -> PlaylistItem:
+    """Return a typical playlist item with multiple recipe."""
     return {
         "title": "Celebrating National Applejack Month with 5 Cocktails!",
         "description": (
@@ -193,6 +202,7 @@ def multi_recipe_item() -> PlaylistItem:
 
 @pytest.fixture
 def blocked_line_item() -> PlaylistItem:
+    """Return a typical playlist item with blocked lines."""
     return {
         "title": "Tiki Cocktail: Three Dots and a Dash",
         "description": (
@@ -224,6 +234,7 @@ def blocked_line_item() -> PlaylistItem:
 
 @pytest.fixture
 def blocked_item(happy_path_item: PlaylistItem) -> PlaylistItem:
+    """Return a playlist item that should not successfully process, although it contains a recipe."""
     copy = happy_path_item.copy()
     copy["title"] = "Tasting Notes: Bobby Burns"
     return copy
@@ -231,6 +242,7 @@ def blocked_item(happy_path_item: PlaylistItem) -> PlaylistItem:
 
 @pytest.fixture
 def no_recipe_item(happy_path_item: PlaylistItem) -> PlaylistItem:
+    """Return a playlist item that should not successfully process, because it contains no recipe."""
     no_recipe = re.sub(
         r"2oz.*", "", happy_path_item["description"], flags=re.DOTALL | re.MULTILINE
     )

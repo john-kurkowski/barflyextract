@@ -1,15 +1,16 @@
-"""Integration tests for the entire project. Keep to a minimum.
-https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
-"""
+"""Integration tests for the entire project.
 
-import pytest
+Keep to a minimum.
+https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html.
+"""
 
 import io
 import os
-import syrupy
 
 import barflyextract.datasource
 import barflyextract.extract
+import pytest
+import syrupy
 
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
@@ -18,6 +19,12 @@ def test_entire_pipeline(
     monkeypatch: pytest.MonkeyPatch,
     snapshot: syrupy.SnapshotAssertion,
 ) -> None:
+    """Test the pipeline from upstream source to printing to the console.
+
+    This test is slow, incurs API quota costs, and is brittle to upstream
+    changes. It is skipped (and does not fail) without an API_KEY set. It
+    should not be run frequently or in CI.
+    """
     monkeypatch.setattr("sys.argv", ["my_cmd"])
     barflyextract.datasource.run()
     step_one_output, _ = capsys.readouterr()

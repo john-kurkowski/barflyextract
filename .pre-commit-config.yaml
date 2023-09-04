@@ -5,6 +5,7 @@ repos:
   rev: 22.3.0
   hooks:
   - id: black
+
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.2.0
   hooks:
@@ -23,7 +24,8 @@ repos:
   - id: mixed-line-ending
     args: ['--fix=no']
 
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v5.10.1
+- repo: https://github.com/charliermarsh/ruff-pre-commit
+  rev: v0.0.254  # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in asetup.cfg
   hooks:
-  - id: isort
+  - id: ruff
+    language: system

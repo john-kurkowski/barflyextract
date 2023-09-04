@@ -9,6 +9,7 @@ Scrape The Educated Barfly's cocktail recipes from its YouTube channel.
 Prerequisites
 =============
 
+- ``cargo``
 - ``pandoc``
 - ``python``
 

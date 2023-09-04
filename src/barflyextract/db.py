@@ -1,9 +1,9 @@
-"""Replaces an entire, known, shared Google Docs document with updated HTML
-(generated elsewhere in this project)."""
+"""Replaces an entire, known, shared Google Docs document with updated HTML (generated elsewhere in this project)."""
 
-import googleapiclient.discovery  # type: ignore[import]
 import os
 import sys
+
+import googleapiclient.discovery  # type: ignore[import]
 from google.auth.transport.requests import Request  # type: ignore[import]
 from google.oauth2.credentials import Credentials  # type: ignore[import]
 from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore[import]
@@ -14,15 +14,19 @@ TARGET_DOCUMENT_ID = "1FyWaqxkr7JADUOpzQInIIkr9xOG4rjbXmWqpvgR7bag"
 
 
 def update_doc(creds: Credentials, doc_id: str, media: MediaFileUpload) -> None:
+    """Update the given Google Docs document with the given media."""
     service = googleapiclient.discovery.build("drive", "v3", credentials=creds)
     files = service.files()
     files.update(fileId=doc_id, media_body=media).execute()
 
 
 def get_or_prompt_creds() -> Credentials:
-    """Per Google's Python quickstart.
-    https://developers.google.com/docs/api/quickstart/python"""
+    """
+    Get or prompt for "database" (i.e. Google Docs API) credentials.
 
+    Per Google's Python quickstart.
+    https://developers.google.com/docs/api/quickstart/python.
+    """
     creds = None
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -42,6 +46,7 @@ def get_or_prompt_creds() -> Credentials:
 
 
 def main() -> None:
+    """Update the Google Docs document that represents this project's database with the contents of the given file."""
     creds = get_or_prompt_creds()
     filename = sys.argv[1]
     media = MediaFileUpload(filename, mimetype="text/html", resumable=True)

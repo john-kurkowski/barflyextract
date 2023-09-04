@@ -1,21 +1,26 @@
-import googleapiclient.discovery  # type: ignore[import]
+"""Functions for scraping from our data source."""
+
 import json
 import os
 import sys
+from collections.abc import Iterator
 from contextlib import AbstractContextManager, nullcontext
-from typing import Any, Generator, TextIO, TypedDict
+from typing import Any, TextIO, TypedDict
+
+import googleapiclient.discovery  # type: ignore[import]
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 
 
 class PlaylistItem(TypedDict):
+    """A subset of fields from a YouTube playlist item."""
+
     title: str
     description: str
 
 
-def scrape_playlist_items(
-    youtube: Any, playlist_id: str
-) -> Generator[PlaylistItem, None, None]:
+def scrape_playlist_items(youtube: Any, playlist_id: str) -> Iterator[PlaylistItem]:
+    """Scrape the given YouTube playlist for all its items."""
     items_per_page = 50
     items_yielded = 0
     max_items = 999
@@ -41,9 +46,8 @@ def scrape_playlist_items(
                 return
 
 
-def scrape_user_uploads(
-    api_key: str, user_id: str
-) -> Generator[PlaylistItem, None, None]:
+def scrape_user_uploads(api_key: str, user_id: str) -> Iterator[PlaylistItem]:
+    """Scrape the given YouTube user's uploads playlist for all its items."""
     youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
 
     request = youtube.channels().list(id=user_id, part="contentDetails")
@@ -54,6 +58,11 @@ def scrape_user_uploads(
 
 
 def run() -> None:
+    """Scrape the YouTube user's uploads playlist for all its items.
+
+    If a filename is given, writes the resulting JSON to that file. Otherwise,
+    writes to stdout.
+    """
     playlist = scrape_user_uploads(os.environ["API_KEY"], TARGET_USER_ID)
     cm: TextIO | AbstractContextManager[TextIO] = (
         nullcontext(sys.stdout) if len(sys.argv) <= 1 else open(sys.argv[1], "w")

@@ -1,10 +1,14 @@
+"""Functions to extract recipes from text, usually author-provided video descriptions."""
+
 import json
 import logging
 import re
 import sys
-import unidecode
+from collections.abc import Iterable
 from contextlib import AbstractContextManager, nullcontext
-from typing import Iterable, Optional, TextIO
+from typing import TextIO
+
+import unidecode
 
 from barflyextract.datasource import PlaylistItem
 
@@ -16,10 +20,13 @@ URL_RE = re.compile(r"\bhttps?://")
 
 
 class RecipePlaylistItem(PlaylistItem):
+    """A PlaylistItem that also contains an extracted recipe."""
+
     recipe: str
 
 
 def print_markdown(fil: TextIO, items: Iterable[RecipePlaylistItem]) -> None:
+    """Emit the given recipes as Markdown to the given file-like object."""
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
 
     for item in sorted_items:
@@ -29,7 +36,11 @@ def print_markdown(fil: TextIO, items: Iterable[RecipePlaylistItem]) -> None:
         print(file=fil)
 
 
-def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
+def process(item: PlaylistItem) -> RecipePlaylistItem | None:
+    """Extract a recipe from the given PlaylistItem.
+
+    Returns None if it doesn't contain a recipe.
+    """
     blocked_types = ("Home Bar", "Tasting")
     is_blocked_type = any(item["title"].startswith(s) for s in blocked_types)
     if is_blocked_type:
@@ -100,6 +111,7 @@ def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
 def process_scraped_items(
     input_items: Iterable[PlaylistItem],
 ) -> tuple[list[RecipePlaylistItem], list[PlaylistItem]]:
+    """Split the given PlaylistItems into ones with a recipe and ones without."""
     items: list[RecipePlaylistItem] = []
     skipped: list[PlaylistItem] = []
     for item in input_items:
@@ -113,10 +125,11 @@ def process_scraped_items(
 
 
 def run() -> None:
+    """Extract recipes from the given JSON file of PlaylistItems."""
     logging.basicConfig(level=logging.INFO)
 
     with (
-        sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], "r", encoding="utf-8")
+        sys.stdin if sys.argv[1] == "-" else open(sys.argv[1], encoding="utf-8")
     ) as fil:
         items, skipped = process_scraped_items(json.load(fil))
 
