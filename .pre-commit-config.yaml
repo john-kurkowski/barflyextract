@@ -2,9 +2,10 @@ exclude: '^docs/conf.py'
 
 repos:
 - repo: https://github.com/ambv/black
-  rev: 22.3.0
+  rev: 22.3.0 # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in setup.cfg
   hooks:
   - id: black
+    language: system
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.2.0
@@ -25,7 +26,7 @@ repos:
     args: ['--fix=no']
 
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.254  # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in asetup.cfg
+  rev: v0.0.254  # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in setup.cfg
   hooks:
   - id: ruff
     language: system
