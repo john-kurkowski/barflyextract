@@ -57,9 +57,23 @@ def process(item: PlaylistItem) -> Optional[RecipePlaylistItem]:
             if (stripped := line.strip()) and stripped and not is_blocked_line(stripped)
         ]
 
-        # TODO
+        if not lines:
+            return ""
 
-        return "\n".join(lines)
+        word_count = len(lines[0].split())
+        is_description = word_count > 10
+        is_measurement = MEASURE_RE.search(lines[0])
+        is_title = not is_description and not is_measurement
+
+        if is_title:
+            lines[0] = "## " + lines[0] + "\n"
+        elif not is_description and is_measurement:
+            lines[0] = "* " + lines[0]
+        else:
+            pass
+        formatted_lines = [lines[0]] + ["* " + line for line in lines[1:]]
+
+        return "\n".join(formatted_lines)
 
     recipe_start_i, recipe_start = maybe_recipe_starts
     recipe_remainder = paras[recipe_start_i + 1 :]
