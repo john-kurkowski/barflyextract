@@ -101,6 +101,11 @@ def test_process_blocked_item(blocked_item):
     assert not result
 
 
+def test_blocked_line_item(blocked_line_item):
+    result = barflyextract.extract.process(blocked_line_item)
+    assert result
+
+
 def test_process_no_recipe_item(no_recipe_item):
     result = barflyextract.extract.process(no_recipe_item)
     assert not result
@@ -254,6 +259,37 @@ def multi_recipe_item() -> PlaylistItem:
             " SIMMER OR BRING TO BOIL) once sugar is fully dissolved, remove from heat,"
             " allow to cool and strain out solids. Resulting syrup lasts 2 to 3 weeks"
             " in the refrigerator."
+        ),
+    }
+
+
+@pytest.fixture
+def blocked_line_item() -> PlaylistItem:
+    return {
+        "title": "Tiki Cocktail: Three Dots and a Dash",
+        "description": (
+            'This cocktail was created by the legendary father of all Tiki Donn "The'
+            ' Beachcomber" Beach during WWII. The name is in reference to the morse'
+            " code call sign for Victory. There's really not much to it than that."
+            " Enjoy!\n\nHere's Links to the tools I'm using:\n\n12oz Bar Ice Scoop:"
+            " https://amzn.to/2PfUkiR\nBarfly Graduated Jigger:"
+            " https://amzn.to/2r3slt2\nJapanese Bitters Dasher:"
+            " https://amzn.to/2OtPzGn\nAngostura Bitters:"
+            " https://amzn.to/2J5tqcf\nLuxardo Cherries:"
+            " https://amzn.to/2SUzZ60\nVitaMix Blender: https://amzn.to/2rjc3wl\n\nWe"
+            " are proud that our official apron sponsor is Stagger Lee Goods. Alfred"
+            " Ramos hand stitches each of these amazing quality aprons in his Northern"
+            " California workshop. He Does custom work and has aprons for just about"
+            " every position in a restaurant and bar so do yourself a favor and check"
+            " him out:\nhttps://www.staggerleegoods.com\n\nIf you are interested in"
+            " helping us offset the cost of production you should check out our Patreon"
+            " page which has a bunch of great perks and goes a long way to helping us"
+            " bring you quality content. You can find that"
+            " here:\nhttps://www.patreon.com/theeducatedbarfly\n\nHere's The"
+            " Specs:\n\n1.5oz (45ml) Martinique Rum\n.5oz (15ml) Demerara Rum\n.25oz"
+            " (7.5ml) Pimento Dram\n.25oz (7.5ml) Velvet Falernum\n.5oz (15ml) Lime"
+            " Juice\n.5oz (15ml) Honey Syrup\n.5oz (15ml) Orange Juice\n2 Dashes"
+            " Angostura Bitters\n3 Luxardo Cherries & Pineapple Cube Garnish"
         ),
     }
 
