@@ -6,6 +6,7 @@ license = { file = "LICENSE.txt" }
 readme = "README.rst"
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Private :: Do Not Upload",
     "Programming Language :: Python",
 ]
 dynamic = ["version"]
@@ -42,8 +43,7 @@ addopts = [
     "--cov",
     "barflyextract",
     "--cov-report",
-    "term-missing",
-    "--verbose",
+    "html",
 ]
 
 [tool.ruff]
