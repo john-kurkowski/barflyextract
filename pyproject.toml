@@ -1,12 +1,50 @@
+[project]
+name = "barflyextract"
+description = "Scrape The Educated Barfly's cocktail recipes from its YouTube channel."
+authors = [{name = "John Kurkowski", email = "john.kurkowski@gmail.com"}]
+license = { file = "LICENSE.txt" }
+readme = "README.rst"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+]
+dynamic = ["version"]
+dependencies = [
+    "google-api-python-client>=1.7.11",
+    "google-auth-oauthlib>=0.5.1",
+    "unidecode>=1.1.1",
+]
+
+[project.optional-dependencies]
+testing = [
+    "black",
+    "mypy",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "syrupy",
+    "types-setuptools",
+]
+
 [build-system]
-# AVOID CHANGING REQUIRES: IT WILL BE UPDATED BY PYSCAFFOLD!
 requires = ["setuptools-scm", "setuptools>=46.1.0", "setuptools_scm[toml]>=5", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools_scm]
-# For smarter version schemes and other configuration options,
-# check out https://github.com/pypa/setuptools_scm
-version_scheme = "no-guess-dev"
+[tool.mypy]
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+addopts = [
+    "--cov",
+    "barflyextract",
+    "--cov-report",
+    "term-missing",
+    "--verbose",
+]
 
 [tool.ruff]
 select = [
@@ -27,3 +65,8 @@ ignore = [
 
 [tool.ruff.pydocstyle]
 convention = "pep257"
+
+[tool.setuptools_scm]
+# For smarter version schemes and other configuration options,
+# check out https://github.com/pypa/setuptools_scm
+version_scheme = "no-guess-dev"
