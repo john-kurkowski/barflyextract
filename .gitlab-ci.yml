@@ -36,7 +36,7 @@ test:
   variables:
     TOXENV: default
   script:
-  - tox -- --snapshot-warn-unused
+  - tox
 
 typecheck:
   image: "python:3.10"
