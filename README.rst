@@ -10,6 +10,7 @@ Prerequisites
 =============
 
 - ``cargo``
+- ``just``
 - ``pandoc``
 - ``python``
 
@@ -33,7 +34,7 @@ Scrape the latest data to a file
     # Your YouTube Data API v3 key here (perhaps from a dotenv)
     export API_KEY=myapikeyhere
 
-    make
+    just
     open build/recipes.html
 
 
@@ -47,7 +48,7 @@ Update the database
    file ``credentials.json`` in this project's directory.
 1. .. code-block:: sh
 
-    make update-db
+    just update-db
 
 Contribute
 ==========
