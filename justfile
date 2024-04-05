@@ -1,6 +1,17 @@
 # Generate HTML recipe list
 default: generate-html
 
+pip_install_args := (
+  '--upgrade --editable ".[testing]"' +
+  if env_var_or_default('CI', '') =~ '.+' { ' --system' } else { '' }
+)
+
+# Install/update all dependencies
+bootstrap:
+  pip install --upgrade uv
+  uv pip install {{pip_install_args}}
+  pre-commit install
+
 clean:
   rm -rf build/
 

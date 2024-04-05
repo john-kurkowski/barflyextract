@@ -20,7 +20,7 @@ Install
 
 .. code-block:: sh
 
-    pip install --editable .
+    just bootstrap
 
 
 Usage
@@ -53,13 +53,6 @@ Update the database
 Contribute
 ==========
 
-Install for local development:
-
-.. code-block:: sh
-
-    pip install --editable '.[testing]'
-    pre-commit install
-
 Tests
 -----
 
@@ -67,7 +60,7 @@ Run all tests, lints, and typechecks with the following command.
 
 .. code-block:: sh
 
-    tox --parallel
+    just test
 
 See tox.ini for individual commands used. For convenience, you should be able
 to run them directly without a ton of arguments, e.g. ``pytest``.
