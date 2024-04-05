@@ -9,6 +9,7 @@ Scrape The Educated Barfly's cocktail recipes from its YouTube channel.
 Prerequisites
 =============
 
+- ``cargo``
 - ``just``
 - ``pandoc``
 - ``python``
@@ -49,10 +50,24 @@ Update the database
 
     just update-db
 
-For more commands and details, see `CONTRIBUTING <./CONTRIBUTING.rst>`_.
+Contribute
+==========
 
-Note
-====
+Install for local development:
 
-This project has been set up using PyScaffold 4.2.1. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
+.. code-block:: sh
+
+    pip install --editable '.[testing]'
+    pre-commit install
+
+Tests
+-----
+
+Run all tests, lints, and typechecks with the following command.
+
+.. code-block:: sh
+
+    tox --parallel
+
+See tox.ini for individual commands used. For convenience, you should be able
+to run them directly without a ton of arguments, e.g. ``pytest``.

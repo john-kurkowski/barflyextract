@@ -1,19 +1,30 @@
-"""Integration tests for the entire project. Keep to a minimum.
-https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
-"""
+"""Integration tests for the entire project.
 
-import pytest
+Keep to a minimum.
+https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html.
+"""
 
 import io
 import os
-import textwrap
 
 import barflyextract.datasource
 import barflyextract.extract
+import pytest
+import syrupy
 
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
-def test_entire_pipeline(capsys, monkeypatch):
+def test_entire_pipeline(
+    capsys: pytest.CaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+    snapshot: syrupy.SnapshotAssertion,
+) -> None:
+    """Test the pipeline from upstream source to printing to the console.
+
+    This test is slow, incurs API quota costs, and is brittle to upstream
+    changes. It is skipped (and does not fail) without an API_KEY set. It
+    should not be run frequently or in CI.
+    """
     monkeypatch.setattr("sys.argv", ["my_cmd"])
     barflyextract.datasource.run()
     step_one_output, _ = capsys.readouterr()
@@ -24,15 +35,4 @@ def test_entire_pipeline(capsys, monkeypatch):
     barflyextract.extract.run()
     step_two_output, _ = capsys.readouterr()
     assert step_two_output
-
-    expected_startswith = textwrap.dedent(
-        """
-        # ☀️ Summer Crusher! Margarita Negra
-
-        Recipe
-        Margarita Negra
-        1oz (30ml) Tequila Blanco
-        1oz (30ml) Mr Black Coffee Liqueur
-        """
-    ).strip()
-    assert step_two_output[: len(expected_startswith)] == expected_startswith
+    assert step_two_output.splitlines()[:10] == snapshot

@@ -22,7 +22,7 @@ cache:
 # services such as redis or postgres
 before_script:
   - python -v                                   # Print out Python version for debugging
-  - pip install tox
+  - pip install tox tox-uv
 
 lint:
   image: "python:3.10"

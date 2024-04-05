@@ -2,13 +2,16 @@ exclude: '^docs/conf.py'
 
 repos:
 - repo: https://github.com/ambv/black
-  rev: 22.3.0
+  rev: 24.3.0 # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in setup.cfg
   hooks:
   - id: black
+    language: system
+
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.2.0
+  rev: v4.5.0
   hooks:
   - id: trailing-whitespace
+    exclude: ambr
   - id: check-added-large-files
   - id: check-ast
   - id: check-json
@@ -22,7 +25,8 @@ repos:
   - id: mixed-line-ending
     args: ['--fix=no']
 
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v5.10.1
+- repo: https://github.com/charliermarsh/ruff-pre-commit
+  rev: v0.3.5  # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in setup.cfg
   hooks:
-  - id: isort
+  - id: ruff
+    language: system
