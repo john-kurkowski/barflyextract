@@ -18,7 +18,6 @@ dependencies = [
 
 [project.optional-dependencies]
 testing = [
-    "black",
     "mypy",
     "pre-commit",
     "pytest",
@@ -62,7 +61,7 @@ select = [
   "W",
 ]
 ignore = [
-  "E501", # line too long; if Black does its job, not worried about the rare long line
+  "E501", # line too long; if formatter does its job, not worried about the rare long line
 ]
 
 [tool.ruff.lint.pydocstyle]
