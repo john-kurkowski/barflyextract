@@ -2,12 +2,13 @@
 
 import os
 import sys
+from typing import cast
 
-import googleapiclient.discovery  # type: ignore[import]
-from google.auth.transport.requests import Request  # type: ignore[import]
-from google.oauth2.credentials import Credentials  # type: ignore[import]
-from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore[import]
-from googleapiclient.http import MediaFileUpload  # type: ignore[import]
+import googleapiclient.discovery  # type: ignore[import-untyped]
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore[import-untyped]
+from googleapiclient.http import MediaFileUpload  # type: ignore[import-untyped]
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 TARGET_DOCUMENT_ID = "1FyWaqxkr7JADUOpzQInIIkr9xOG4rjbXmWqpvgR7bag"
@@ -27,20 +28,22 @@ def get_or_prompt_creds() -> Credentials:
     Per Google's Python quickstart.
     https://developers.google.com/docs/api/quickstart/python.
     """
-    creds = None
     if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+        creds = cast(
+            Credentials,
+            Credentials.from_authorized_user_file("token.json", SCOPES),  # type: ignore[no-untyped-call]
+        )
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+            creds.refresh(Request())  # type: ignore[no-untyped-call]
         else:
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
         with open("token.json", "w") as token:
-            token.write(creds.to_json())
+            token.write(creds.to_json())  # type: ignore[no-untyped-call]
 
     return creds
 

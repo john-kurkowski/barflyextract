@@ -12,7 +12,7 @@ from barflyextract.extract import RecipePlaylistItem
 
 
 def test_process_happy_path_item(
-    happy_path_item: PlaylistItem, snapshot: syrupy.SnapshotAssertion
+    happy_path_item: PlaylistItem, snapshot: syrupy.assertion.SnapshotAssertion
 ) -> None:
     """Test that a happy path item is processed correctly."""
     result = barflyextract.extract.process(happy_path_item)
@@ -22,7 +22,7 @@ def test_process_happy_path_item(
 
 
 def test_process_multi_recipe_item(
-    multi_recipe_item: PlaylistItem, snapshot: syrupy.SnapshotAssertion
+    multi_recipe_item: PlaylistItem, snapshot: syrupy.assertion.SnapshotAssertion
 ) -> None:
     """Test that an item with multiple recipes is correctly processed."""
     result = barflyextract.extract.process(multi_recipe_item)
@@ -72,7 +72,7 @@ def test_process_scraped_items(
 
 
 def test_print_markdown(
-    capsys: pytest.CaptureFixture, snapshot: syrupy.SnapshotAssertion
+    capsys: pytest.CaptureFixture[str], snapshot: syrupy.assertion.SnapshotAssertion
 ) -> None:
     """Test that a list of RecipePlaylistItems is correctly printed."""
     input_items: list[RecipePlaylistItem] = [

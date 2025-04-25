@@ -7,7 +7,7 @@ from collections.abc import Iterator
 from contextlib import AbstractContextManager, nullcontext
 from typing import Any, TextIO, TypedDict
 
-import googleapiclient.discovery  # type: ignore[import]
+import googleapiclient.discovery  # type: ignore[import-untyped]
 
 TARGET_USER_ID = "UCu9ArHUJZadlhwt3Jt0tqgA"
 

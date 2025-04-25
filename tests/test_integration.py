@@ -16,9 +16,9 @@ import barflyextract.extract
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
 def test_entire_pipeline(
-    capsys: pytest.CaptureFixture,
+    capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
-    snapshot: syrupy.SnapshotAssertion,
+    snapshot: syrupy.assertion.SnapshotAssertion,
 ) -> None:
     """Test the pipeline from upstream source to printing to the console.
 
