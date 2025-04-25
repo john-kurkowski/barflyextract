@@ -1,0 +1,36 @@
+# serializer version: 1
+# name: test_main_emits_results
+  dict({
+    'stderr': '',
+    'stdout': '''
+      Martini
+      Gin
+      Dry Vermouth
+      
+  
+    ''',
+  })
+# ---
+# name: test_main_validates_args
+  dict({
+    'stderr': '''
+      Usage: search.py <recipe_html> <query...>
+  
+    ''',
+    'stdout': '',
+  })
+# ---
+# name: test_search_matches_multiple_tokens_case_insensitive
+  list([
+    SearchResult(title='Martini', recipe='Gin\nDry Vermouth'),
+  ])
+# ---
+# name: test_search_matches_title
+  list([
+    SearchResult(title='Negroni', recipe='Gin\nSweet Vermouth\nCampari'),
+  ])
+# ---
+# name: test_search_no_matches
+  list([
+  ])
+# ---

@@ -12,6 +12,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
+    "beautifulsoup4>=4.13.4",
     "google-api-python-client>=1.7.11",
     "google-auth-oauthlib>=0.5.1",
     "unidecode>=1.1.1",

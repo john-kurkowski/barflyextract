@@ -25,6 +25,11 @@ generate-md: generate-playlist
 update-db: generate-html
   uv run src/barflyextract/db.py build/recipes.html
 
+# Query recipes
+
+search +query:
+  uv run src/barflyextract/search.py build/recipes.html {{query}}
+
 # Test recipes
 
 test:
