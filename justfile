@@ -1,23 +1,17 @@
 # Generate HTML recipe list
 default: generate-html
 
-pip_install_args := (
-  '--upgrade --editable ".[testing]"' +
-  if env_var_or_default('CI', '') =~ '.+' { ' --system' } else { '' }
-)
-
 # Install/update all dependencies
 bootstrap:
   pip install --upgrade uv
-  uv pip install {{pip_install_args}}
-  pre-commit install
+  uv run --all-extras pre-commit install
 
 clean:
   rm -rf build/
 
 # Scrape relevant video metadata from YouTube
 generate-playlist: _scaffold_build_dir
-  {{ if path_exists('build/playlist.json') == "false" { 'python src/barflyextract/datasource.py build/playlist.json' } else { "" } }}
+  {{ if path_exists('build/playlist.json') == "false" { 'uv run src/barflyextract/datasource.py build/playlist.json' } else { "" } }}
 
 # Generate HTML recipe list
 generate-html: generate-md
@@ -25,16 +19,16 @@ generate-html: generate-md
 
 # Generate Markdown recipe list
 generate-md: generate-playlist
-  python src/barflyextract/extract.py build/playlist.json build/recipes.md
+  uv run src/barflyextract/extract.py build/playlist.json build/recipes.md
 
 # Update central database of recipes
 update-db: generate-html
-  python src/barflyextract/db.py build/recipes.html
+  uv run src/barflyextract/db.py build/recipes.html
 
 # Test recipes
 
 test:
-  tox --parallel
+  uv run --all-extras tox --parallel
 
 # Private recipes
 
