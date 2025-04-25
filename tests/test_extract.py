@@ -3,9 +3,10 @@
 import re
 import sys
 
-import barflyextract.extract
 import pytest
 import syrupy
+
+import barflyextract.extract
 from barflyextract.datasource import PlaylistItem
 from barflyextract.extract import RecipePlaylistItem
 

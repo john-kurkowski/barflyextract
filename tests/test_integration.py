@@ -7,10 +7,11 @@ https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
 import io
 import os
 
-import barflyextract.datasource
-import barflyextract.extract
 import pytest
 import syrupy
+
+import barflyextract.datasource
+import barflyextract.extract
 
 
 @pytest.mark.skipif(not os.environ.get("API_KEY"), reason="API_KEY not set")
