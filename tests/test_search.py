@@ -56,6 +56,7 @@ def test_main_validates_args(
     snapshot: syrupy.assertion.SnapshotAssertion,
 ) -> None:
     """Test that the CLI fails fast on missing args."""
+    monkeypatch.setattr(search_module, "_FORCE_TERMINAL", True)
     monkeypatch.setattr(sys, "argv", ["search.py"])
     with pytest.raises(SystemExit) as excinfo:
         search_module.main()
@@ -71,6 +72,7 @@ def test_main_emits_results(
     snapshot: syrupy.assertion.SnapshotAssertion,
 ) -> None:
     """Test that the CLI prints search hits."""
+    monkeypatch.setattr(search_module, "_FORCE_TERMINAL", True)
     html_path = tmp_path / "recipes.html"
     html_path.write_text(SAMPLE_HTML, encoding="utf-8")
     monkeypatch.setattr(sys, "argv", ["search.py", str(html_path), "dry"])

@@ -5,7 +5,7 @@
     'stdout': '''
       Martini
       Gin
-      Dry Vermouth
+      [1;33mDry[0m Vermouth
       
   
     ''',

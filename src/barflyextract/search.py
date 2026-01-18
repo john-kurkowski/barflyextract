@@ -6,6 +6,8 @@ from collections.abc import Iterator
 
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString, Tag
+from rich.console import Console
+from rich.text import Text
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -17,6 +19,10 @@ class SearchResult:
 
     title: str
     recipe: str
+
+
+# Exposed for tests to force ANSI output under capsys
+_FORCE_TERMINAL: bool | None = None
 
 
 def _extract_title(recipe: Tag) -> str:
@@ -55,11 +61,22 @@ def main() -> None:
         html = fil.read()
 
     hits = search(html, *query_tokens)
+    console = Console(force_terminal=_FORCE_TERMINAL)
 
     for hit in hits:
-        print(hit.title)
-        print(hit.recipe)
-        print()
+        title_text = Text(hit.title)
+        title_text.highlight_words(
+            query_tokens, style="bold yellow", case_sensitive=False
+        )
+        console.print(title_text)
+
+        recipe_text = Text(hit.recipe)
+        recipe_text.highlight_words(
+            query_tokens, style="bold yellow", case_sensitive=False
+        )
+        console.print(recipe_text)
+
+        console.print()
 
 
 if __name__ == "__main__":
