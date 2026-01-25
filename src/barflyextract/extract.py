@@ -25,6 +25,46 @@ class RecipePlaylistItem(PlaylistItem):
     recipe: str
 
 
+def _is_blocked_line(line: str) -> bool:
+    return bool(IGNORED_LINE_RE.search(line))
+
+
+def _is_blocked_para(para: str) -> bool:
+    return bool(URL_RE.search(para))
+
+
+def _clean_recipe_lines(para: str) -> list[str]:
+    lines = [
+        stripped
+        for line in para.splitlines()
+        if (stripped := line.strip()) and stripped and not _is_blocked_line(stripped)
+    ]
+
+    return lines
+
+
+def _format_para(para: str) -> str:
+    lines = _clean_recipe_lines(para)
+
+    if not lines:
+        return ""
+
+    word_count = len(lines[0].split())
+    is_description = word_count > 10
+    is_measurement = MEASURE_RE.search(lines[0])
+    is_title = not is_description and not is_measurement
+
+    if is_title:
+        lines[0] = "## " + lines[0] + "\n"
+    elif not is_description and is_measurement:
+        lines[0] = "* " + lines[0]
+    else:
+        pass
+    formatted_lines = [lines[0]] + ["* " + line for line in lines[1:]]
+
+    return "\n".join(formatted_lines)
+
+
 def print_markdown(fil: TextIO, items: Iterable[RecipePlaylistItem]) -> None:
     """Emit the given recipes as Markdown to the given file-like object."""
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
@@ -55,41 +95,10 @@ def process(item: PlaylistItem) -> RecipePlaylistItem | None:
         logging.debug(item["description"])
         return None
 
-    def is_blocked_line(line: str) -> bool:
-        return bool(IGNORED_LINE_RE.search(line))
-
-    def is_blocked_para(para: str) -> bool:
-        return bool(URL_RE.search(para))
-
-    def format_para(para: str) -> str:
-        lines = [
-            stripped
-            for line in para.splitlines()
-            if (stripped := line.strip()) and stripped and not is_blocked_line(stripped)
-        ]
-
-        if not lines:
-            return ""
-
-        word_count = len(lines[0].split())
-        is_description = word_count > 10
-        is_measurement = MEASURE_RE.search(lines[0])
-        is_title = not is_description and not is_measurement
-
-        if is_title:
-            lines[0] = "## " + lines[0] + "\n"
-        elif not is_description and is_measurement:
-            lines[0] = "* " + lines[0]
-        else:
-            pass
-        formatted_lines = [lines[0]] + ["* " + line for line in lines[1:]]
-
-        return "\n".join(formatted_lines)
-
     recipe_start_i, recipe_start = maybe_recipe_starts
     recipe_remainder = paras[recipe_start_i + 1 :]
-    recipe = [format_para(recipe_start)] + [
-        format_para(para) for para in recipe_remainder if not is_blocked_para(para)
+    recipe = [_format_para(recipe_start)] + [
+        _format_para(para) for para in recipe_remainder if not _is_blocked_para(para)
     ]
     logging.debug(
         """Recipe found in "%s" at paragraph %d. Taking it and remaining %d paragraphs.""",
