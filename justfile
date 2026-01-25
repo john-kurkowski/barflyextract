@@ -27,7 +27,7 @@ update-db: generate-html
 
 # Query recipes
 
-search +query:
+search +query: generate-html
   uv run src/barflyextract/search.py build/recipes.html {{query}}
 
 # Test recipes
