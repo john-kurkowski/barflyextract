@@ -21,13 +21,13 @@ dependencies = [
 
 [project.optional-dependencies]
 testing = [
-    "mypy",
     "pre-commit",
     "pytest",
     "pytest-cov",
     "python-lsp-server",
     "ruff",
     "syrupy",
+    "ty",
     "tox",
     "tox-uv",
     "types-setuptools",
@@ -36,9 +36,6 @@ testing = [
 [build-system]
 requires = ["setuptools-scm", "setuptools>=46.1.0", "setuptools_scm[toml]>=5", "wheel"]
 build-backend = "setuptools.build_meta"
-
-[tool.mypy]
-strict = true
 
 [tool.pytest.ini_options]
 addopts = [
@@ -72,3 +69,6 @@ convention = "pep257"
 # For smarter version schemes and other configuration options,
 # check out https://github.com/pypa/setuptools_scm
 version_scheme = "no-guess-dev"
+
+[tool.ty.terminal]
+error-on-warning = true
