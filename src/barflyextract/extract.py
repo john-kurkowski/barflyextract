@@ -13,10 +13,24 @@ import unidecode
 from barflyextract.datasource import PlaylistItem
 
 IGNORED_LINE_RE = re.compile(r"(here.*spec)", re.IGNORECASE)
-MEASURE_RE = re.compile(r"^\S*\d\s*(oz|ml|g)", re.MULTILINE)
+MEASURE_RE = re.compile(
+    r"""
+    ^[\d./\s-]+    # numeric quantities like "1 1/2"
+    \s*(oz|ml|g)   # common recipe units
+    """,
+    re.MULTILINE | re.VERBOSE,
+)
 PARAGRAPHS_RE = re.compile(r"\n{2,}")
 TYPE_NAME_RE = re.compile(r"(?P<type>.*):\s*(?P<name>.*)")
 URL_RE = re.compile(r"\bhttps?://")
+RECIPE_TITLE_RE = re.compile(
+    r"""
+    ^recipes?\b          # "recipe" or "recipes"
+    (?:\s*[:\-]\s*       # optional ":"/"-" separator
+    (?P<title>.+))?      # optional inline title
+    $""",
+    re.IGNORECASE | re.VERBOSE,
+)
 
 
 class RecipePlaylistItem(PlaylistItem):
@@ -39,6 +53,15 @@ def _clean_recipe_lines(para: str) -> list[str]:
         for line in para.splitlines()
         if (stripped := line.strip()) and stripped and not _is_blocked_line(stripped)
     ]
+
+    while lines:
+        labeled_title = RECIPE_TITLE_RE.match(lines[0])
+        if not labeled_title:
+            break  # first non-label line, keep it
+        if labeled_title.group("title"):
+            lines[0] = labeled_title.group("title").strip()  # inline title
+            break
+        lines = lines[1:]  # drop bare "Recipe" label
 
     return lines
 
@@ -65,14 +88,44 @@ def _format_para(para: str) -> str:
     return "\n".join(formatted_lines)
 
 
+def _split_recipe_blocks(recipe: str) -> list[str]:
+    """Split a recipe into "##" headed blocks for cross-item deduping."""
+    blocks: list[str] = []
+    current: list[str] = []
+    for line in recipe.splitlines():
+        if line.startswith("## ") and current:
+            blocks.append("\n".join(current).strip())
+            current = []
+        current.append(line)
+    if current:
+        blocks.append("\n".join(current).strip())
+    return blocks
+
+
+def _dedupe_recipe_blocks(recipe: str, seen: set[str]) -> str:
+    """Drop repeated recipe blocks across items to avoid duplicated hits."""
+    blocks = _split_recipe_blocks(recipe)
+    kept: list[str] = []
+    for block in blocks:
+        if block in seen:
+            continue
+        seen.add(block)
+        kept.append(block)
+    return "\n\n".join(kept)
+
+
 def print_markdown(fil: TextIO, items: Iterable[RecipePlaylistItem]) -> None:
     """Emit the given recipes as Markdown to the given file-like object."""
     sorted_items = sorted(items, key=lambda item: unidecode.unidecode(item["title"]))
+    seen_blocks: set[str] = set()
 
     for item in sorted_items:
+        recipe = _dedupe_recipe_blocks(item["recipe"], seen_blocks)
+        if not recipe:
+            continue
         print(f"# {item['title']}", file=fil)
         print(file=fil)
-        print(item["recipe"], file=fil)
+        print(recipe, file=fil)
         print(file=fil)
 
 

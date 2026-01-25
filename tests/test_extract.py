@@ -31,6 +31,56 @@ def test_process_multi_recipe_item(
     assert result == snapshot
 
 
+def test_process_recipe_label_title() -> None:
+    """Ensure recipe titles skip the literal 'Recipe' label."""
+    item: PlaylistItem = {
+        "title": "Something: Margarita Negra",
+        "description": (
+            "Intro text.\n\nRecipe\nMargarita Negra\n1oz (30ml) Tequila Blanco\n"
+            "1oz (30ml) Mr Black Coffee Liqueur\n1oz (30ml) Lime Juice\n"
+            ".5oz (15ml) Agave\n2 Lime Wheel Garnish"
+        ),
+    }
+    result = barflyextract.extract.process(item)
+    assert result
+    assert "## Margarita Negra" in result["recipe"]
+    assert "## Recipe" not in result["recipe"]
+    assert "* Margarita Negra" not in result["recipe"]
+
+
+def test_process_repeated_recipe_labels() -> None:
+    """Ensure repeated recipe labels are removed before title detection."""
+    item: PlaylistItem = {
+        "title": "Amaretto Bitter",
+        "description": (
+            "Intro text.\n\nRecipe\nRecipe\nAmaretto Bitter\n1oz (30ml) Lemon Juice\n"
+            "1 Tsp Rich Simple Syrup (2:1)\n1 1/2oz (45ml) Amaretto\n"
+            "3/4oz (22ml) Jamaica Rum Overproof\n1/4oz (7.5ml) Aperol\n"
+            "1 Egg White\nAmaretti Cookie Garnish"
+        ),
+    }
+    result = barflyextract.extract.process(item)
+    assert result
+    assert "## Amaretto Bitter" in result["recipe"]
+    assert "## Recipe" not in result["recipe"]
+
+
+def test_process_measurement_title_detection() -> None:
+    """Ensure measurement-first lines are not treated as titles."""
+    item: PlaylistItem = {
+        "title": "The Scofflaw",
+        "description": (
+            "Intro text.\n\nRecipe\nThe Scofflaw\n1 1/2oz (45ml) Rye whiskey\n"
+            "3/4oz (22ml) Dry Vermouth\n3/4oz (22ml) Lemon Juice\n"
+            "1/2oz (15ml) Grenadine\n2 Dashes Orange Bitters\nLemon Twist"
+        ),
+    }
+    result = barflyextract.extract.process(item)
+    assert result
+    assert "## 1 1/2oz" not in result["recipe"]
+    assert "* 1 1/2oz (45ml) Rye whiskey" in result["recipe"]
+
+
 @pytest.mark.xfail  # TODO: test blocked paragraphs
 def test_process_blocked_paragraphs() -> None:  # TODO: fixture with blocked paragraphs
     """TODO."""
@@ -82,6 +132,41 @@ def test_print_markdown(
     barflyextract.extract.print_markdown(sys.stdout, input_items)
     output, _ = capsys.readouterr()
     assert output == snapshot
+
+
+def test_print_markdown_dedupes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Test that duplicate recipes are only printed once."""
+    input_items: list[RecipePlaylistItem] = [
+        {"title": "One", "description": "doesnt matter", "recipe": "Two"},
+        {"title": "One", "description": "doesnt matter", "recipe": "Two"},
+    ]
+    barflyextract.extract.print_markdown(sys.stdout, input_items)
+    output, _ = capsys.readouterr()
+    assert output.count("# One") == 1
+
+
+def test_print_markdown_dedupes_shared_blocks(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Test that duplicate recipe blocks are removed across different items."""
+    input_items: list[RecipePlaylistItem] = [
+        {
+            "title": "Video A",
+            "description": "doesnt matter",
+            "recipe": "## Hightail Out\n\n* Gin\n\n## Other\n\n* Vodka",
+        },
+        {
+            "title": "Hightail Out",
+            "description": "doesnt matter",
+            "recipe": "## Hightail Out\n\n* Gin",
+        },
+    ]
+    barflyextract.extract.print_markdown(sys.stdout, input_items)
+    output, _ = capsys.readouterr()
+    assert output.count("## Hightail Out") == 1
+    assert "## Other" in output
 
 
 @pytest.fixture
