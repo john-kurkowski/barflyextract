@@ -2,7 +2,7 @@ exclude: '^docs/conf.py'
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v6.0.0
   hooks:
   - id: trailing-whitespace
     exclude: ambr
@@ -19,10 +19,11 @@ repos:
   - id: mixed-line-ending
     args: ['--fix=no']
 
-- repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.3.5  # key required by pre-commit, but ignored in practice, because we use the "system" version of the tool, set in setup.cfg
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.14.14
   hooks:
-  - id: ruff
-    language: system
-  - id: ruff-format
-    language: system
+    - id: ruff
+      args: [--fix]
+      language: system
+    - id: ruff-format
+      language: system
