@@ -64,7 +64,7 @@ def main() -> None:
     console = Console(force_terminal=_FORCE_TERMINAL)
 
     for hit in hits:
-        title_text = Text(hit.title)
+        title_text = Text(hit.title, style="bold cyan")
         title_text.highlight_words(
             query_tokens, style="bold yellow", case_sensitive=False
         )
