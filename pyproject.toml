@@ -28,8 +28,6 @@ testing = [
     "ruff",
     "syrupy",
     "ty",
-    "tox",
-    "tox-uv",
     "types-setuptools",
 ]
 

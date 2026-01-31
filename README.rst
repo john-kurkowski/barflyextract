@@ -62,5 +62,5 @@ Run all tests, lints, and typechecks with the following command.
 
     just test
 
-See tox.ini for individual commands used. For convenience, you should be able
-to run them directly without a ton of arguments, e.g. ``pytest``.
+For individual checks, you can run ``just lint``, ``just typecheck``, or
+``just pytest``.

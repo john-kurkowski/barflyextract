@@ -22,28 +22,22 @@ cache:
 # services such as redis or postgres
 before_script:
   - python -v                                   # Print out Python version for debugging
-  - pip install tox tox-uv
+  - pip install --upgrade uv
 
 lint:
   image: "python:3.10"
-  variables:
-    TOXENV: lint
   script:
-  - tox
+  - uv run --all-extras pre-commit run --all-files
 
 test:
   image: "python:3.10"
-  variables:
-    TOXENV: default
   script:
-  - tox
+  - uv run --all-extras pytest --snapshot-warn-unused
 
 typecheck:
   image: "python:3.10"
-  variables:
-    TOXENV: typecheck
   script:
-  - tox
+  - uv run --all-extras ty check src/ tests/
 
 # This deploy job uses a simple deploy flow to Heroku, other providers, e.g. AWS Elastic Beanstalk
 # are supported too: https://github.com/travis-ci/dpl

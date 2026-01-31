@@ -32,8 +32,17 @@ search +query: generate-html
 
 # Test recipes
 
-test:
-  uv run --all-extras tox --parallel
+lint:
+  uv run --all-extras pre-commit run --all-files
+
+typecheck:
+  uv run --all-extras ty check src/ tests/
+
+pytest:
+  uv run --all-extras pytest --snapshot-warn-unused
+
+[parallel]
+test: lint typecheck pytest
 
 # Private recipes
 
