@@ -64,3 +64,12 @@ Run all tests, lints, and typechecks with the following command.
 
 For individual checks, you can run ``just lint``, ``just typecheck``, or
 ``just pytest``.
+
+Disclaimer
+==========
+
+This is an unofficial tool for extracting publicly available YouTube data and
+is not affiliated with or endorsed by The Educated Barfly, YouTube, or Google.
+Content remains owned by its creators. Use only in compliance with applicable
+laws and service terms. You provide your own API credentials and assume all
+usage costs.
