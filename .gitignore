@@ -50,3 +50,6 @@ MANIFEST
 # Private keys
 credentials.json
 token.json
+
+# Local Netlify folder
+.netlify
