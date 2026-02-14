@@ -3,7 +3,7 @@ barflyextract
 =============
 
 
-Scrape The Educated Barfly's cocktail recipes from its YouTube channel.
+Scrape cocktail recipes from YouTube video descriptions.
 
 
 Prerequisites
